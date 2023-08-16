@@ -92,11 +92,13 @@ r.damage = function(m)
     return 50*player:spellSlot(3).level + 130 + 0.45 * common.GetTotalAP(player) + (r.stacks * (20 + player:spellSlot(3).level * 5) + 0.05 * common.GetTotalAP(player) )
 end
 
+local r_cast = 0 
+
 -- must update in on_tick
 local slow_pred_q = menu.xerathmenu.Combo.slow_pred_q:get()
 local slow_pred_w = menu.xerathmenu.Combo.slow_pred_w:get()
 -- local slow_pred_e = menu.xerathmenu.Combo.slow_pred_e:get()
--- local slow_pred_r = menu.xerathmenu.Combo.slow_pred_q:get()
+local slow_pred_r = menu.xerathmenu.Combo.slow_pred_q:get()
 
 
 local function trace_filter_w(seg, obj)
@@ -106,6 +108,21 @@ local function trace_filter_w(seg, obj)
         return true
     end
     if pred.trace.circular.hardlockmove(w, seg, obj) then
+        return true
+    end
+
+    if pred.trace.newpath(obj, 0.033, 0.500) then
+        return true
+    end
+end
+
+local function trace_filter_r(seg, obj)
+    if seg.startPos:dist(seg.endPos) > r.range then return false end
+
+    if pred.trace.circular.hardlock(r, seg, obj) then
+        return true
+    end
+    if pred.trace.circular.hardlockmove(r, seg, obj) then
         return true
     end
 
@@ -210,6 +227,21 @@ local function ts_filter_e_gap(res, object, dist)
     end 
 end
 
+local function ts_filter_r(res, object, dist)
+    if object and common.IsValidTarget(object) and common.IsEnemyHero(object) then
+        if (dist > r.range or object.buff["rocketgrab"]) then return end
+        if (menu.xerathmenu.Combo.r_size:get() < game.mousePos:dist(object.pos)) then return end
+        local seg = pred.circular.get_prediction(r, object)
+        if not seg then return false end
+        if seg.startPos:dist(seg.endPos) > r.range then return false end
+        if slow_pred_r then
+            if not trace_filter_r(seg, object) then return false end
+        end
+        res.pos = seg.endPos
+        res.object = object
+        return true
+    end 
+end
 
 local function combo()
     if menu.xerathmenu.Combo.q_combo:get() then
@@ -424,12 +456,25 @@ local function interrupt(spell)
     end
 end
 
+local function auto_r()
+    if r.shots() ~= 0 then
+        local resR = ts.get_result(ts_filter_r)
+        if resR.pos then
+            if not orb.core.is_spell_locked() then
+                player:castSpell('pos', 3, vec3(resR.pos.x, mousePos.y, resR.pos.y))
+            end
+        end
+    end
+end
+
+
 local function on_tick()
     -- chat.print(r.shots().." "..r.maxShots)
     slow_pred_q = menu.xerathmenu.Combo.slow_pred_q:get()
     slow_pred_w = menu.xerathmenu.Combo.slow_pred_w:get()
     -- slow_pred_e = menu.xerathmenu.Combo.slow_pred_e:get()
-    -- slow_pred_r = menu.xerathmenu.Combo.slow_pred_r:get()
+    slow_pred_r = menu.xerathmenu.Combo.slow_pred_r:get()
+    auto_r()
     gapClose()
     q_range()
     killsteal()
@@ -460,12 +505,11 @@ local function on_draw()
     end
     if ((ready and player:spellSlot(3).state == 0) or not ready) and drawr then
         graphics.draw_circle(player.pos, r.range, 2, graphics.argb(255, 0, 255, 0), 100)
-        local v1 = player.pos
-        local radius = r.range
-        local line_width = 1
-        local color = 0xFFFFFFFF
-        local points_n = 32
-        minimap.draw_circle(v1, radius, line_width, color, points_n)
+        minimap.draw_circle(player.pos, r.range, 1, 0xFFFFFFFF, 32)
+        if r.shots() ~= 0 and menu.xerathmenu.Combo.r_use:get() then
+            local v1 = vec3(game.mousePos.x,game.mousePos.y,game.mousePos.z)
+            graphics.draw_circle(v1, menu.xerathmenu.Combo.r_size:get(), 1, graphics.argb(200, 255, 255, 255), 100)
+        end
     end
     if menu.xerathmenu.Draw.dmg_draw:get() then
         
@@ -560,7 +604,7 @@ cb.add(cb.tick,on_tick)
 
 local function on_process_spell(spell)
     if spell.owner == player then
-        print(spell.name)
+        -- print(spell.name)
     end
     interrupt()
     if spell.owner == player and spell.name == "XerathArcanopulseChargeUp" then
@@ -570,7 +614,6 @@ local function on_process_spell(spell)
         q.range = 700
         q_cast = 0
     end
-    
 end
 
 

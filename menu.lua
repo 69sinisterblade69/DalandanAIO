@@ -171,15 +171,17 @@ if player.charName == "Xerath" then
     Dalandan_menu.xerathmenu.Combo:header('q_combo_header','Q settings')
     Dalandan_menu.xerathmenu.Combo:boolean('q_combo', 'Use Q', true);
     Dalandan_menu.xerathmenu.Combo:dropdown('q_combo_when', 'Use Q time (if possible) [WIP]',2, {"Before W","After W"});
-    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_q', 'Use slower prediction on Q', true);
+    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_q', 'Use slower prediction on Q', false);
     Dalandan_menu.xerathmenu.Combo:header('w_combo_header','W settings')
     Dalandan_menu.xerathmenu.Combo:boolean('w_combo', 'Use W', true);
     Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_w', 'Use slower prediction on W', true);
     Dalandan_menu.xerathmenu.Combo:header('e_combo_header','E settings')
     Dalandan_menu.xerathmenu.Combo:boolean('e_combo', 'Use E', true);
     -- Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_e', 'Use slower prediction on E', true);
-    -- Dalandan_menu.xerathmenu.Combo:header('r_combo_header','R settings')
-    -- Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slower prediction on R', true);
+    Dalandan_menu.xerathmenu.Combo:header('r_combo_header','R settings')
+    Dalandan_menu.xerathmenu.Combo:boolean('r_use', 'Use R (auto missiles)', true);
+    Dalandan_menu.xerathmenu.Combo:slider('r_size', 'Size of auto missile', 500, 300, 800, 50);
+    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slower prediction on R', true);
 
 
     -- Lane
@@ -200,6 +202,10 @@ if player.charName == "Xerath" then
     Dalandan_menu.xerathmenu.Misc:header('killsteal_header','Killsteal settings')
     Dalandan_menu.xerathmenu.Misc:boolean('q_ks', 'Use Q to Killsteal', true);
     Dalandan_menu.xerathmenu.Misc:boolean('w_ks', 'Use W to Killsteal', true);
+    Dalandan_menu.xerathmenu.Misc:header('r_header','R settings')
+
+
+
 
 
     --draw
