@@ -38,6 +38,19 @@ function common.GetEnemyHeroes()
     return heroes
 end
 
+-- Returns table and number of enemy heroes near @pos
+function common.CountEnemiesNearPos(pos, radius)
+    heroes = {}
+    for i=0, objManager.enemies_n-1 do
+        heroes[i] = objManager.enemies[i]
+    end
+    local validFunc = function(obj)
+        return obj and obj.health and obj.health > 0 and common.IsValidTarget(obj) and obj.type == TYPE_HERO
+    end
+    return common.CountObjectsNearPos(pos, radius, heroes, validFunc)
+end
+
+
 -- Returns table and number of objects near @pos
 function common.CountMinionsNearPos(pos, radius, objects, team)
     local validFunc = function(obj)
@@ -45,6 +58,19 @@ function common.CountMinionsNearPos(pos, radius, objects, team)
     end
     return common.CountObjectsNearPos(pos, radius, objects, validFunc)
 end
+
+-- Returns table and number of objects near @pos
+function common.CountMinionsNearPos2(pos, radius)
+    minions = {}
+    for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
+        minions[i] = objManager.minions[TEAM_ENEMY][i]
+    end
+    local validFunc = function(obj)
+        return obj and not obj.isDead and obj.health and obj.health > 0 and obj.isVisible and obj.isTargetable
+    end
+    return common.CountObjectsNearPos(pos, radius, minions, validFunc)
+end
+
 
 -- Returns total AD of @obj or player
 function common.GetTotalAD(obj)
@@ -212,6 +238,16 @@ function common.damageIndicator(damageM,damageP,range_max,range_min,tooltip)
         end
     end
 end
+
+common.champs = {
+    --   Lux = true;
+    --   Malphite = true;
+    --   Ryze = true;
+      TwistedFate = true;
+      Xerath = true;
+      -- Yasuo = true;
+      -- Zed = true;
+}
 
 return common
 

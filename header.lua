@@ -1,21 +1,13 @@
-local champs = {
---   Lux = true;
---   Malphite = true;
---   Ryze = true;
-  TwistedFate = true;
-  Xerath = true;
-}
-
 return { id = "Dalandan_AIO", name = "Dalandan AIO - " .. player.charName, 
 author = "Dalandan_dev",
 description = "Free DalandanAIO",
 shard = {
-    'main','header','common','menu',
+    'main','common','menu','reloader',
     -- 'Lux',
     -- 'Malphite',
     -- 'Ryze',
     'TwistedFate',
-    'Xerath'
+    'Xerath',
 },
 flag = {
   text = "Dalandan AIO",
@@ -25,8 +17,11 @@ flag = {
     background2 = 0xFFDBCF1F,      
   },
 },
+  -- load = function()
+  --   return champs[player.charName]; 
+  -- end
   load = function()
-    return champs[player.charName]; 
+    return true; 
   end
 }
 
