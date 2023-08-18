@@ -1,6 +1,8 @@
 # DalandanAIO
 Hanbot shard, script for league of legends
 
+Utilities: Arena auto reload
+
 Supported champions:
 Twisted fate, Xerath
 
