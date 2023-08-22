@@ -295,4 +295,46 @@ if player.charName == "Zed" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.zedmenu.Draw:boolean('shadow_draw', 'Draw Shadows', true);
     Dalandan_menu.zedmenu.Draw:boolean('dmg_draw', 'Draw if killable with R', true);
 end
+if player.charName == "Yasuo" and Dalandan_menu.reloadmenu.champion:get() then
+    Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO PORT - "..player.charName);
+    --------------- not mine (dominationAIO/Yasuo and Yone) ---------------
+    -- Dalandan_menu.yasuomenu:menu("Qcombo", "Yasuo_Q Combo");
+    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
+    -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Windcombo', 'Yasuo Wind in Combo', true);
+    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qaa', 'Q After AA', false);
+    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qba', 'Q Before AA', false);
+    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qalways', 'Q always in combo', true);
+    -- Dalandan_menu.yasuo.Qcombo:slider('Yasuo_Qoa', 'Q Cancel aa', 30, 0, 100, 1);
+
+    -- Dalandan_menu.yasuomenu:menu("Ecombo", "Yasuo_E Combo");
+    -- Dalandan_menu.yasuo.Ecombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
+    -- Dalandan_menu.yasuo.Ecombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
+
+    -- Dalandan_menu.yasuomenu:menu("EQcombo", "Yasuo_EQ Combo");
+    -- Dalandan_menu.yasuo.EQcombo:boolean('Yasuo_EQcombo', 'Yasuo EQ in Combo', true);
+    -- Dalandan_menu.yasuo.EQcombo:boolean('Yasuo_EWindcombo', 'Yasuo EQ Wind in Combo', true);
+
+    -- Dalandan_menu.yasuomenu:menu("Rcombo", "Yasuo_R Combo");
+
+    -- -- Dalandan_menu.yasuomenu:menu("Wcombo", "Yasuo_W Combo");
+    -- -- Dalandan_menu.yasuo.Wcombo:boolean('Yasuo_Wcombo', 'Yasuo W in Combo', true);
+
+    -- Dalandan_menu.yasuomenu:menu("ysClear", "Clear Settings");
+
+    -- Dalandan_menu.yasuomenu:menu("yskeys", "All Key Settings");
+
+    --------------- new shit (mine + private) ---------------
+    Dalandan_menu.yasuomenu:menu("Combo", "Combo");
+    Dalandan_menu.yasuomenu.Combo:boolean("q_combo","Use Q", true)
+    Dalandan_menu.yasuomenu.Combo:boolean("e_combo","Use E", true)
+    Dalandan_menu.yasuomenu.Combo:boolean("e_gap_combo","Use E as gapcloser", true)
+    Dalandan_menu.yasuomenu.Combo:boolean("r_combo","Use R", true)
+    Dalandan_menu.yasuomenu.Combo:slider("r_enemy_hp","Maximum % HP for enemy to use R",60,1,100,1)
+    Dalandan_menu.yasuomenu.Combo:slider("r_yasuo_hp","Amount of %HP that yasuo needs to have more than the enemy to R",15,1,100,1)
+    Dalandan_menu.yasuomenu.Combo.r_yasuo_hp:set('tooltip','Recommended value is between 10-20')
+
+    Dalandan_menu.yasuomenu:menu("Misc", "Misc");
+    -- Dalandan_menu.yasuomenu.Misc:boolean("EEvade", "Use E evade",true);
+    Dalandan_menu.yasuomenu.Misc:keybind('flee_key', 'Flee', 'Z', nil);
+end
 return Dalandan_menu

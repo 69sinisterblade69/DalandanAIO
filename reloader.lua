@@ -1,7 +1,7 @@
-chat.print('[Dalandan AIO] Arena reloader Loading...')
+-- chat.print('[Dalandan AIO] Arena reloader Loading...')
 
 if game.mapID ~= 30 then
-    chat.print("[Dalandan AIO] Not arena :(")
+    -- chat.print("[Dalandan AIO] Not arena :(")
     return
 end
 
@@ -38,9 +38,18 @@ local function reload()
 end
 
 local function on_tick()
-    if player.inShopRange ~= last_shop then
-        DelayAction(reload,2)
+    if player.charName == "Viego" then
+        for i = 0, player.buffManager.count - 1 do
+            local buff = player.buffManager:get(i)
+            if buff and buff.valid and (buff.name == "viegopassivecasting" or buff.name == "viegopassivetransform") then 
+                goto skip
+            end
+        end
     end
+    if player.inShopRange ~= last_shop then
+        DelayAction(reload,1)
+    end
+    ::skip::
     last_shop = player.inShopRange
 end
 

@@ -159,6 +159,7 @@ local function trace_filter_e(seg, obj)
     if pred.trace.newpath(obj, 0.1, 0.500) then
         return true
     end
+
 end
 
 local function ts_filter_q(res, object, dist)
@@ -275,8 +276,15 @@ local function combo()
         if not player:spellSlot(2).state~=0 then
             local resE = ts.get_result(ts_filter_e)
             if resE.pos then
-                if not orb.core.is_spell_locked() then
-                    player:castSpell('pos', 2, vec3(resE.pos.x, mousePos.y, resE.pos.y))
+                local pred_pos = resE.pos
+                local seg = {}
+                seg.startPos = player.path.serverPos2D
+				seg.endPos = vec2(pred_pos.x, pred_pos.y)
+                local dupa = pred.linear.get_prediction(e, resE.object)
+				if not pred.collision.get_prediction(e, dupa, resE.object) then
+                    if not orb.core.is_spell_locked() then
+                        player:castSpell('pos', 2, vec3(resE.pos.x, mousePos.y, resE.pos.y))
+                    end
                 end
             end
         end
