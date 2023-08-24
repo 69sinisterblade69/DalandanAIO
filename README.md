@@ -1,5 +1,5 @@
 # DalandanAIO
-Hanbot shard, script for league of legends
+[Hanbot](https://t.me/hanbot_never_die) shard, script for league of legends
 
 Utilities: Arena auto reload
 
