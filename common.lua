@@ -74,8 +74,8 @@ end
 
 -- Returns total AD of @obj or player
 function common.GetTotalAD(obj)
-        local obj = obj or player
-        return (obj.baseAttackDamage + obj.flatPhysicalDamageMod) * obj.percentPhysicalDamageMod
+    local obj = obj or player
+    return (obj.baseAttackDamage + obj.flatPhysicalDamageMod) * obj.percentPhysicalDamageMod
 end
     
 -- Returns bonus AD of @obj or player
@@ -86,10 +86,15 @@ end
     
 -- Returns total AP of @obj or player
 function common.GetTotalAP(obj)
-        local obj = obj or player
-        return obj.flatMagicDamageMod * obj.percentMagicDamageMod
+    local obj = obj or player
+    return obj.flatMagicDamageMod * obj.percentMagicDamageMod
 end
     
+function common.GetBonusAS(obj)
+    local obj = obj or player
+    return mathf.round(((obj.attackSpeedMod - 1) * 100),3)
+end
+
 -- Returns physical damage multiplier on @target from @damageSource or player
 function common.PhysicalReduction(target, damageSource)
     local damageSource = damageSource or player

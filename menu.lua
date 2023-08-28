@@ -153,8 +153,10 @@ if player.charName == "Ryze" and Dalandan_menu.reloadmenu.champion:get() then
 end
 if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.tfmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+    Dalandan_menu.tfmenu:set('icon',graphics.sprite('TwistedFate/TwistedFate.png'))
     -- Combo
     Dalandan_menu.tfmenu:menu("Combo", "Combo");
+    Dalandan_menu.tfmenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
     Dalandan_menu.tfmenu.Combo:header('q_combo_header','Q settings')
     Dalandan_menu.tfmenu.Combo:boolean('q_combo', 'Use Q', true);
     Dalandan_menu.tfmenu.Combo:boolean('q_combo_onlyCC', '^ Use Q only when CC/Slow [shit]', true);
@@ -165,6 +167,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
     
     --Lane
     Dalandan_menu.tfmenu:menu("Lane", "Lane Clear");
+    Dalandan_menu.tfmenu.Lane:set('icon',graphics.sprite('Sprites/icon minions light.png'))
     Dalandan_menu.tfmenu.Lane:header('q_lane_header','Q settings lane')
     Dalandan_menu.tfmenu.Lane:boolean('q_lane', 'Use Q in lane [idk kinda wonky]', true);
     Dalandan_menu.tfmenu.Lane:slider('q_lane_minion', '^ Only when x minion hit', 4, 1, 12, 1);
@@ -173,7 +176,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
     Dalandan_menu.tfmenu.Lane:header('w_lane_header','W settings lane')
     Dalandan_menu.tfmenu.Lane:boolean('w_lane', 'Use W in lane', true);
     Dalandan_menu.tfmenu.Lane.w_lane:set('tooltip', 'Will always pick red card unless other conditions are met');
-    Dalandan_menu.tfmenu.Lane:slider('w_lane_mana', 'Pick blue card if below x% mana', 45, 0, 100, 5);
+    Dalandan_menu.tfmenu.Lane:slider('w_lane_mana', 'Pick blue card if below x% mana', 80, 0, 100, 5);
     Dalandan_menu.tfmenu.Lane:boolean('w_lane_defend', 'Defend tower [WIP]', true);
     Dalandan_menu.tfmenu.Lane.w_lane_defend:set('tooltip', 'Will stun Super Minions attacking turret');
 
@@ -187,6 +190,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
 
     --misc
     Dalandan_menu.tfmenu:menu("Misc", "Misc");
+    Dalandan_menu.tfmenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
     Dalandan_menu.tfmenu.Misc:header('semi_header','Auto W')
     Dalandan_menu.tfmenu.Misc:keybind('semi_gold', 'Pick golden card', 'W', nil);
     Dalandan_menu.tfmenu.Misc:keybind('semi_blue', 'Pick blue card', 'E', nil);
@@ -199,6 +203,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
 
     --draw
     Dalandan_menu.tfmenu:menu("Draw", "Drawing");
+    Dalandan_menu.tfmenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
     Dalandan_menu.tfmenu.Draw:header('draw_header','Draw range')
     Dalandan_menu.tfmenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
     Dalandan_menu.tfmenu.Draw:boolean('q_draw', 'Draw Q', true);
@@ -210,10 +215,11 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
 end
 if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.xerathmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-
+    Dalandan_menu.xerathmenu:set('icon',graphics.sprite('Xerath/Xerath.png'))
     
     -- Combo
     Dalandan_menu.xerathmenu:menu("Combo", "Combo");
+    Dalandan_menu.xerathmenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
     Dalandan_menu.xerathmenu.Combo:header('q_combo_header','Q settings')
     Dalandan_menu.xerathmenu.Combo:boolean('q_combo', 'Use Q', true);
     Dalandan_menu.xerathmenu.Combo:dropdown('q_combo_when', 'Use Q time (if possible) [WIP]',2, {"Before W","After W"});
@@ -229,9 +235,9 @@ if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.xerathmenu.Combo:slider('r_size', 'Size of auto missile', 500, 300, 800, 50);
     Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slower prediction on R', true);
 
-
     -- Lane
     Dalandan_menu.xerathmenu:menu("Lane", "Lane");
+    Dalandan_menu.xerathmenu.Lane:set('icon',graphics.sprite('Sprites/icon minions light.png'))
     Dalandan_menu.xerathmenu.Lane:header('q_lane_header','Q settings')
     Dalandan_menu.xerathmenu.Lane:boolean('q_lane', 'Use Q in lane [sometimes bugged lmao]', true); 
     Dalandan_menu.xerathmenu.Lane:slider('q_lane_minion', '^ Only when x minion hit', 4, 1, 12, 1);
@@ -240,7 +246,8 @@ if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.xerathmenu.Lane:boolean('w_lane', 'Use W in lane', true);
 
     -- Misc
-    Dalandan_menu.xerathmenu:menu("Misc", "Misc"); 
+    Dalandan_menu.xerathmenu:menu("Misc", "Misc");
+    Dalandan_menu.xerathmenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
     Dalandan_menu.xerathmenu.Misc:header('gapClose_header','Anti-Gapcloser settings')
     Dalandan_menu.xerathmenu.Misc:boolean('e_gap', 'Use E for Anti-Gapclose', true);
     Dalandan_menu.xerathmenu.Misc:header('interrupt_header','Interrupt settings')
@@ -252,6 +259,7 @@ if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
 
     --draw
     Dalandan_menu.xerathmenu:menu("Draw", "Drawing");
+    Dalandan_menu.xerathmenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
     Dalandan_menu.xerathmenu.Draw:header('draw_header','Draw range')
     Dalandan_menu.xerathmenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
     Dalandan_menu.xerathmenu.Draw:boolean('q_draw', 'Draw Q', true);
@@ -296,7 +304,8 @@ if player.charName == "Zed" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.zedmenu.Draw:boolean('dmg_draw', 'Draw if killable with R', true);
 end
 if player.charName == "Yasuo" and Dalandan_menu.reloadmenu.champion:get() then
-    Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO PORT - "..player.charName);
+    Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+    Dalandan_menu.yasuomenu:set('icon',graphics.sprite('Yasuo/Yasuo.png'))
     --------------- not mine (dominationAIO/Yasuo and Yone) ---------------
     -- Dalandan_menu.yasuomenu:menu("Qcombo", "Yasuo_Q Combo");
     -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
@@ -325,16 +334,37 @@ if player.charName == "Yasuo" and Dalandan_menu.reloadmenu.champion:get() then
 
     --------------- new shit (mine + private) ---------------
     Dalandan_menu.yasuomenu:menu("Combo", "Combo");
+    Dalandan_menu.yasuomenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
     Dalandan_menu.yasuomenu.Combo:boolean("q_combo","Use Q", true)
     Dalandan_menu.yasuomenu.Combo:boolean("e_combo","Use E", true)
     Dalandan_menu.yasuomenu.Combo:boolean("e_gap_combo","Use E as gapcloser", true)
     Dalandan_menu.yasuomenu.Combo:boolean("r_combo","Use R", true)
-    Dalandan_menu.yasuomenu.Combo:slider("r_enemy_hp","Maximum % HP for enemy to use R",60,1,100,1)
-    Dalandan_menu.yasuomenu.Combo:slider("r_yasuo_hp","Amount of %HP that yasuo needs to have more than the enemy to R",15,1,100,1)
+    Dalandan_menu.yasuomenu.Combo:slider("r_enemy_hp","R if enemy %HP is < this value",60,1,100,1)
+    Dalandan_menu.yasuomenu.Combo:slider("r_yasuo_hp","R if your %HP > target %HP by this much",15,1,100,1)
     Dalandan_menu.yasuomenu.Combo.r_yasuo_hp:set('tooltip','Recommended value is between 10-20')
 
+    Dalandan_menu.yasuomenu:menu("Harass", "Harass");
+    Dalandan_menu.yasuomenu.Harass:set('icon',graphics.sprite('Sprites/Harass.png'))
+    Dalandan_menu.yasuomenu.Harass:boolean("q_harass","Use Q", true)
+    Dalandan_menu.yasuomenu.Harass:boolean("e_harass","Use E", true)
+    Dalandan_menu.yasuomenu.Harass:boolean("e_gap_harass","Use E as gapcloser with minions", true)
+
     Dalandan_menu.yasuomenu:menu("Misc", "Misc");
+    Dalandan_menu.yasuomenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
     -- Dalandan_menu.yasuomenu.Misc:boolean("EEvade", "Use E evade",true);
     Dalandan_menu.yasuomenu.Misc:keybind('flee_key', 'Flee', 'Z', nil);
+    Dalandan_menu.yasuomenu.Misc:boolean("q_laneclear_stack","Use Q to stack in laneclear", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("e_laneclear","Use E in laneclear", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("q_lasthit","Use Q in lasthit", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("e_lasthit","Use E in lasthit", true)
+
+    Dalandan_menu.yasuomenu:menu("Draw", "Draw");
+    Dalandan_menu.yasuomenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
+    Dalandan_menu.yasuomenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
+    Dalandan_menu.yasuomenu.Draw:boolean('q_draw', 'Draw Q', true);
+    -- Dalandan_menu.yasuomenu.Draw:boolean('w_draw', 'Draw W', true);
+    -- Dalandan_menu.yasuomenu.Draw:boolean('e_draw', 'Draw E', true);
+    Dalandan_menu.yasuomenu.Draw:boolean('r_draw', 'Draw R', true);
+
 end
 return Dalandan_menu

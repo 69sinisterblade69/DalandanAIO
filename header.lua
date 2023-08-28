@@ -6,8 +6,9 @@ shard = {
     -- 'Lux',
     -- 'Malphite',
     -- 'Ryze',
-    'TwistedFate',
-    'Xerath',
+    'TwistedFate/TwistedFate',
+    'Xerath/Xerath',
+    'Yasuo/Yasuo2',
 },
 flag = {
   text = "Dalandan AIO",
@@ -17,9 +18,18 @@ flag = {
     background2 = 0xFFDBCF1F,      
   },
 },
-  -- load = function()
-  --   return champs[player.charName]; 
-  -- end
+resources = {
+  'Sprites/Combo.png', 
+  'Sprites/Draw.png', 
+  'Sprites/Harass.png', 
+  'Sprites/Misc.png', 
+  'Sprites/icon minions dark.png',
+  'Sprites/icon minions light.png',
+  
+  'TwistedFate/TwistedFate.png',
+  'Yasuo/Yasuo.png',
+  'Xerath/Xerath.png',
+},
   load = function()
     return true; 
   end
