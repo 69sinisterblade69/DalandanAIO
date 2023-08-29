@@ -4,7 +4,7 @@
 Utilities: Arena auto reload
 
 Supported champions:
-Twisted fate, Xerath
+Twisted fate, Xerath, Yasuo
 
 Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/28.08.2023/DalandanAIO.shard
 
