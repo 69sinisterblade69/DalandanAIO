@@ -12,7 +12,7 @@ local q = {
     range = 1450,
     boundingRadiusMod = 0,
     damage = function(m)
-        return 20*player:spellSlot(0).level + 50 + 0.55 * common.GetTotalAP(player) + 0.02 * (player.maxMana - player.baseMana)
+        return 20*player:spellSlot(0).level + 50 + 0.9 * common.GetTotalAP(player)
     end,
     collision = {
         wall = true,
