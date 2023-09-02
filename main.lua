@@ -1,4 +1,4 @@
-chat.print('[Dalandan AIO] PRE-RELEASE 22.08.2023 Loading...')
+chat.print('[Dalandan AIO] PRE-RELEASE 02.09.2023 Loading...')
 chat.print('[Dalandan AIO] https://discord.gg/9cxRCHYR4y')
 chat.print('[Dalandan AIO] https://github.com/69sinisterblade69/DalandanAIO')
 

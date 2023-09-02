@@ -67,8 +67,10 @@ end
 
 local function canE(target)
     local ebuff = nil
-    for i = 0, target.buffManager.count - 1 do
-        local buff = target.buffManager:get(i)
+	local buff_keys = player.buff.keys
+	for i = 1, buff_keys.n do
+		local buff_key = buff_keys[i]
+		local buff = player.buff[buff_key]
         if buff and buff.valid and buff.name == "YasuoE" then 
             return false
         end
@@ -155,8 +157,10 @@ local function combo()
         if menu.yasuomenu.Combo.r_combo:get() and not player:spellSlot(3).state ~= 0 then
             local enemyHPPercentage = target.object.maxHealth / 100 * menu.yasuomenu.Combo.r_enemy_hp:get()
             local isEnemyKnockedUp = false
-            for i = 0, target.object.buffManager.count - 1 do
-                local buff = target.object.buffManager:get(i)
+            local buff_keys = target.buff.keys
+            for i = 1, buff_keys.n do
+                local buff_key = buff_keys[i]
+                local buff = target.buff[buff_key]
                 if buff and buff.valid and buff.type == BUFF_KNOCKUP then 
                     isEnemyKnockedUp = true
                 end
@@ -199,8 +203,10 @@ local function combo()
             end
         end
         local qBuff = nil
-        for i = 0, player.buffManager.count - 1 do
-            local buff = player.buffManager:get(i)
+        local buff_keys = player.buff.keys
+        for i = 1, buff_keys.n do
+            local buff_key = buff_keys[i]
+            local buff = player.buff[buff_key]
             if buff and buff.valid and buff.name == "YasuoQ2" then 
                 qBuff = true
             end
@@ -240,8 +246,10 @@ local function combo()
         end
         if player:spellSlot(2).state == 0 and menu.yasuomenu.Combo.e_combo:get() then
             local qBuff = nil
-            for i = 0, player.buffManager.count - 1 do
-                local buff = player.buffManager:get(i)
+            local buff_keys = player.buff.keys
+            for i = 1, buff_keys.n do
+                local buff_key = buff_keys[i]
+                local buff = player.buff[buff_key]
                 if buff and buff.valid and buff.name == "YasuoQ1" then -- missclick? YasuoQ2 maybe??
                     qBuff = true
                 end
@@ -279,8 +287,10 @@ local function laneClear()
     else
         if player:spellSlot(0).state == 0 and menu.yasuomenu.Misc.q_laneclear_stack:get() then
             local qBuff = false
-            for i = 0, player.buffManager.count - 1 do
-                local buff = player.buffManager:get(i)
+            local buff_keys = player.buff.keys
+            for i = 1, buff_keys.n do
+                local buff_key = buff_keys[i]
+                local buff = player.buff[buff_key]
                 if buff and buff.valid and buff.name == "YasuoQ2" then
                     qBuff = true
                 end
@@ -366,8 +376,10 @@ local function lasthit()
     
     if menu.yasuomenu.Misc.q_lasthit:get() and player:spellSlot(0).state == 0 then
         local qBuff = false
-        for i = 0, player.buffManager.count - 1 do
-            local buff = player.buffManager:get(i)
+        local buff_keys = player.buff.keys
+        for i = 1, buff_keys.n do
+            local buff_key = buff_keys[i]
+            local buff = player.buff[buff_key]
             if buff and buff.valid and buff.name == "YasuoQ2" then
                 qBuff = true
             end
@@ -421,8 +433,10 @@ local function harass()
         end
 
         local qBuff = false
-        for i = 0, player.buffManager.count - 1 do
-            local buff = player.buffManager:get(i)
+        local buff_keys = player.buff.keys
+        for i = 1, buff_keys.n do
+            local buff_key = buff_keys[i]
+            local buff = player.buff[buff_key]
             if buff and buff.valid and buff.name == "YasuoQ2" then
                 qBuff = true
             end
@@ -462,8 +476,10 @@ local function harass()
         end
         if menu.yasuomenu.Harass.e_harass:get() and player:spellSlot(2).state == 0 then
             local qBuff = false
-            for i = 0, player.buffManager.count - 1 do
-                local buff = player.buffManager:get(i)
+            local buff_keys = player.buff.keys
+            for i = 1, buff_keys.n do
+                local buff_key = buff_keys[i]
+                local buff = player.buff[buff_key]
                 if buff and buff.valid and buff.name == "YasuoQ1" then
                     qBuff = true
                 end
@@ -505,8 +521,10 @@ local function on_draw()
     local ready = menu.yasuomenu.Draw.ready:get()
 
     local qBuff = false
-    for i = 0, player.buffManager.count - 1 do
-        local buff = player.buffManager:get(i)
+	local buff_keys = player.buff.keys
+	for i = 1, buff_keys.n do
+		local buff_key = buff_keys[i]
+		local buff = player.buff[buff_key]
         if buff and buff.valid and buff.name == "YasuoQ2" then
             qBuff = true
         end

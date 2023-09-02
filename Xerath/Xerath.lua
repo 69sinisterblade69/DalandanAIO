@@ -77,8 +77,10 @@ local r = {
     shots = function(a)
             -- xerathrshots   stacks2
             local obj = player
-            for i = 0, obj.buffManager.count - 1 do
-                local buff = obj.buffManager:get(i)
+            local buff_keys = player.buff.keys
+            for i = 1, buff_keys.n do
+                local buff_key = buff_keys[i]
+                local buff = player.buff[buff_key]
                 if buff and buff.valid and buff.name == "xerathrshots" then
                     return buff.stacks2
                 end

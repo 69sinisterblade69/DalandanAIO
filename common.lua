@@ -250,21 +250,23 @@ common.champs = {
     --   Ryze = true;
       TwistedFate = true;
       Xerath = true;
-      -- Yasuo = true;
+      Yasuo = true;
       -- Zed = true;
 }
 
 return common
 
 
--- forbidden art
+-- less forbidden art
 
 -- for j=0, objManager.maxObjects-1 do
 --     local obj = objManager.get(j)
 --     if obj and obj.type==TYPE_HERO then
 --         local hpBar = obj.barPos
---         for i = 0, obj.buffManager.count - 1 do
---             local buff = obj.buffManager:get(i)
+--         local buff_keys = player.buff.keys
+--         for i = 1, buff_keys.n do
+--             local buff_key = buff_keys[i]
+--             local buff = player.buff[buff_key]
 --             if buff and buff.valid then 
 --                 local string = "Name: "..buff.name.." Type: "..buff.type.." Stacks: "..buff.stacks.." Stacks2: "..buff.stacks2
 --                 graphics.draw_text_2D(string, 18, hpBar.x + 160, hpBar.y + 70 + 15*i, 0xFFFFFFFF)

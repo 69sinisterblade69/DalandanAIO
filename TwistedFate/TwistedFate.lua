@@ -37,8 +37,10 @@ local function trace_filter(seg, obj)
     if pred.trace.linear.hardlockmove(q, seg, obj) then
         return true
     end
-    for i = 0, obj.buffManager.count - 1 do
-        local buff = obj.buffManager:get(i)
+	local buff_keys = obj.buff.keys
+	for i = 1, buff_keys.n do
+		local buff_key = buff_keys[i]
+		local buff = obj.buff[buff_key]
         if buff and buff.valid then 
             if buff.type == 5 or buff.type == 8 or buff.type == 10 or buff.type == 11 or buff.type == 22 or
                     buff.type == 24 or buff.type == 28 or buff.type == 29 or buff.type == 30 or buff.type == 34 then
