@@ -63,6 +63,53 @@ if Dalandan_menu.mainmenu.utility:get() then
     for i, obj in pairs(common.GetEnemyHeroes()) do
       Dalandan_menu.utilitymenu.pings.ults:boolean(obj.charName,"Ping on "..obj.charName.." ult",false)
     end
+    Dalandan_menu.utilitymenu.pings:boolean('chat_summoner','Write summoner spells in chat', false)
+    Dalandan_menu.utilitymenu.pings:menu("summoner","Summoner spells")
+    for i, obj in pairs(common.GetEnemyHeroes()) do
+      -- Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName.."1","Ping on "..obj:spellSlot(4).name,false)
+      -- Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName.."2","Ping on "..obj:spellSlot(5).name,false)
+      for i=4,5 do
+        if obj:spellSlot(i).name == "SummonerDot" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." ignite",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerHaste" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." ghost",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerHeal" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." heal",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerBoost" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." cleanse",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerExhaust" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." exhaust",false)
+          goto SummonerEnd
+        end
+        if string.find(obj:spellSlot(i).name, "Smite") then
+          -- Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." smite",false)
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"SMITE IS BUGGED AND I DONT KNOW WHY",false)
+          goto SummonerEnd
+        end
+        if string.find(obj:spellSlot(i).name, "teleport") then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." teleport",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerBarrier" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." barrier",false)
+          goto SummonerEnd
+        end
+        if obj:spellSlot(i).name == "SummonerFlash" then
+          Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." flash",false)
+          goto SummonerEnd
+        end
+        Dalandan_menu.utilitymenu.pings.summoner:boolean(obj.charName..i,"Ping on "..obj.charName.." "..obj:spellSlot(i).name,false)
+        ::SummonerEnd::
+      end
+    end
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
