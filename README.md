@@ -10,7 +10,8 @@ Utilities:
 - Arena auto reload 
 - Auto ping ward (teammates will see ping) 
 - Write in chat enemy ult cooldown
+- Write in chat enemy summoner spells cooldowns
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/04.09.2023/DalandanAIO.shard
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/05.09.2023/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
