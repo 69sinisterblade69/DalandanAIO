@@ -1,9 +1,42 @@
 local Dalandan_menu = {}
 local common = module.load("Dalandan_AIO", "common");
 
-Dalandan_menu.reloadmenu = menu("Dalandan_Menu_Reloader", "Dalandan AIO - Menu");
-Dalandan_menu.reloadmenu:boolean('champion', 'Load champion script', true);
-Dalandan_menu.reloadmenu:boolean('reload', 'Load auto reloading on arena', true);
+local function menuReload() 
+  local delayedActions, delayedActionsExecuter = {}, nil
+  local function DelayAction(func, delay, args) --delay in seconds
+    if not delayedActionsExecuter then
+      function delayedActionsExecuter()
+        for t, funcs in pairs(delayedActions) do
+          if t <= os.clock() then
+            for i = 1, #funcs do
+              local f = funcs[i]
+              if f and f.func then
+                f.func(unpack(f.args or {}))
+              end
+            end
+            delayedActions[t] = nil
+          end
+        end
+      end
+      cb.add(cb.tick, delayedActionsExecuter)
+    end
+    local t = os.clock() + (delay or 0)
+    if delayedActions[t] then
+      delayedActions[t][#delayedActions[t] + 1] = {func = func, args = args}
+    else
+      delayedActions[t] = {{func = func, args = args}}
+    end
+  end
+  local function reload()
+      core.reload()
+  end
+  DelayAction(reload,0.1)
+end
+
+Dalandan_menu.mainmenu = menu("Dalandan_Menu", "Dalandan AIO - Menu");
+Dalandan_menu.mainmenu:boolean('champion', 'Load champion script', true);
+Dalandan_menu.mainmenu:boolean('reload', 'Load auto reloading on arena', true);
+Dalandan_menu.mainmenu:boolean('utility', 'Load utility', true);
 
 local champ 
 if common.champs[player.charName] then
@@ -12,41 +45,27 @@ else
   champ = false
 end
 
-Dalandan_menu.reloadmenu.champion:set('visible',champ)
+Dalandan_menu.mainmenu.champion:set('visible',champ)
 
-Dalandan_menu.reloadmenu.champion:set('callback', function()
-    local delayedActions, delayedActionsExecuter = {}, nil
-    local function DelayAction(func, delay, args) --delay in seconds
-      if not delayedActionsExecuter then
-        function delayedActionsExecuter()
-          for t, funcs in pairs(delayedActions) do
-            if t <= os.clock() then
-              for i = 1, #funcs do
-                local f = funcs[i]
-                if f and f.func then
-                  f.func(unpack(f.args or {}))
-                end
-              end
-              delayedActions[t] = nil
-            end
-          end
-        end
-        cb.add(cb.tick, delayedActionsExecuter)
-      end
-      local t = os.clock() + (delay or 0)
-      if delayedActions[t] then
-        delayedActions[t][#delayedActions[t] + 1] = {func = func, args = args}
-      else
-        delayedActions[t] = {{func = func, args = args}}
-      end
-    end
-    local function reload()
-        core.reload()
-    end
-    DelayAction(reload,0.1)
-end)
+Dalandan_menu.mainmenu.champion:set('callback', menuReload)
+Dalandan_menu.mainmenu.reload:set('callback', menuReload)
+Dalandan_menu.mainmenu.utility:set('callback', menuReload)
 
-if player.charName == "Lux" and Dalandan_menu.reloadmenu.champion:get() then
+if Dalandan_menu.mainmenu.utility:get() then
+    Dalandan_menu.utilitymenu = menu("Dalandan_Menu_Utility", "Dalandan AIO - Utility");
+    
+    Dalandan_menu.utilitymenu:menu("pings", "Auto pings")
+    Dalandan_menu.utilitymenu.pings:boolean('ping_ward', 'Ping "enemy has vision" on wards', false);
+    Dalandan_menu.utilitymenu.pings:boolean('ping_ward_visible', '^ Ping only if ward is on your screen', false);
+    Dalandan_menu.utilitymenu.pings:boolean('chat_ult','Write ults in chat', false)
+    -- Dalandan_menu.utilitymenu.pings:boolean('ping_ult','Ping ults in chat', false)
+    Dalandan_menu.utilitymenu.pings:menu("ults","Ults")
+    for i, obj in pairs(common.GetEnemyHeroes()) do
+      Dalandan_menu.utilitymenu.pings.ults:boolean(obj.charName,"Ping on "..obj.charName.." ult",false)
+    end
+end
+
+if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.luxmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     --Combo
     Dalandan_menu.luxmenu:menu("Combo", "Combo");
@@ -81,7 +100,7 @@ if player.charName == "Lux" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.luxmenu.Draw:boolean('r_draw', 'Draw R', true);
 end
 
-if player.charName == "Malphite" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "Malphite" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.malphitemenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     --Combo
     Dalandan_menu.malphitemenu:menu("Combo", "Combo");
@@ -121,7 +140,7 @@ if player.charName == "Malphite" and Dalandan_menu.reloadmenu.champion:get() the
     Dalandan_menu.malphitemenu.Draw:keybind('r_draw_dmg', '^ Draw R damage', nil, 'G');
     -- Dalandan_menu.malphitemenu.Draw:dropdown('dmg_draw_type', '^ Show dmg from all skills or only ready', 1,{"full","full without R","ready"});
 end
-if player.charName == "Ryze" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "Ryze" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.ryzemenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     --Combo
     Dalandan_menu.ryzemenu:menu("Combo", "Combo");
@@ -151,7 +170,7 @@ if player.charName == "Ryze" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.ryzemenu.Draw:boolean('w_draw', 'Draw W', false);
     Dalandan_menu.ryzemenu.Draw:boolean('e_draw', 'Draw E', false);
 end
-if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "TwistedFate" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.tfmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     Dalandan_menu.tfmenu:set('icon',graphics.sprite('TwistedFate/TwistedFate.png'))
     -- Combo
@@ -213,7 +232,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.reloadmenu.champion:get() 
     Dalandan_menu.tfmenu.Draw:boolean('dmg_draw_ready', '^ Show damage only if skill ready', true);
     Dalandan_menu.tfmenu.Draw:boolean('q_draw_dmg', '^ Draw Q damage', true);
 end
-if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     Dalandan_menu.xerathmenu:set('icon',graphics.sprite('Xerath/Xerath.png'))
     
@@ -275,7 +294,7 @@ if player.charName == "Xerath" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.xerathmenu.Draw:boolean('e_draw_dmg', '^ Draw E damage', true);
     
 end
-if player.charName == "Zed" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "Zed" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.zedmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     Dalandan_menu.zedmenu:menu("Combo", "Combo");
     Dalandan_menu.zedmenu.Combo:boolean('q_combo', 'Use Q', true);
@@ -303,7 +322,7 @@ if player.charName == "Zed" and Dalandan_menu.reloadmenu.champion:get() then
     Dalandan_menu.zedmenu.Draw:boolean('shadow_draw', 'Draw Shadows', true);
     Dalandan_menu.zedmenu.Draw:boolean('dmg_draw', 'Draw if killable with R', true);
 end
-if player.charName == "Yasuo" and Dalandan_menu.reloadmenu.champion:get() then
+if player.charName == "Yasuo" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     Dalandan_menu.yasuomenu:set('icon',graphics.sprite('Yasuo/Yasuo.png'))
     --------------- not mine (dominationAIO/Yasuo and Yone) ---------------
