@@ -67,7 +67,7 @@ end
 
 local function canE(target)
     local ebuff = nil
-	local buff_keys = player.buff.keys
+	local buff_keys = target.buff.keys
 	for i = 1, buff_keys.n do
 		local buff_key = buff_keys[i]
 		local buff = player.buff[buff_key]
@@ -157,10 +157,10 @@ local function combo()
         if menu.yasuomenu.Combo.r_combo:get() and not player:spellSlot(3).state ~= 0 then
             local enemyHPPercentage = target.object.maxHealth / 100 * menu.yasuomenu.Combo.r_enemy_hp:get()
             local isEnemyKnockedUp = false
-            local buff_keys = target.buff.keys
+            local buff_keys = target.object.buff.keys
             for i = 1, buff_keys.n do
                 local buff_key = buff_keys[i]
-                local buff = target.buff[buff_key]
+                local buff = target.object.buff[buff_key]
                 if buff and buff.valid and buff.type == BUFF_KNOCKUP then 
                     isEnemyKnockedUp = true
                 end
@@ -191,7 +191,7 @@ local function combo()
                     if obj and obj.team ~= TEAM_ALLY and obj.type==TYPE_MINION and common.IsValidTarget(obj) and canE(obj) and obj.pos:dist(player.pos) <= e.range and not string.find(string.lower(tostring(obj.name)),"plant") then
                         local x1,y1 = posAfterE(obj)
                         if vec3(x1,obj.pos.y,y1):dist(target.object.pos) < min_dist then
-                            min_dist = vec3(x1,obj.pos.y,y1):dist(mousePos)
+                            min_dist = vec3(x1,obj.pos.y,y1):dist(target.object.pos)
                             min_minion = obj
                         end
                     end
@@ -318,7 +318,7 @@ local function laneClear()
                 if minion.health <= e.damage() * common.MagicReduction(minion) then
                     for i, turret in pairs(turrets) do
                         local x,y = posAfterE(minion)
-                        if vec2(x,y):dist(vec2(turret.pos.x, turret.pos.z)) <= 750 + turret.boundingRadius + player.boundingRadius then
+                        if vec2(x,y):dist(vec2(turret.pos.x, turret.pos.z)) <= 800 + turret.boundingRadius + player.boundingRadius then
                             goto turretESkip
                         end
                     end
@@ -410,7 +410,7 @@ end
 local function harass()
     local target = getTarget("harass", 1400)
     if target and target.object ~= nil then
-        
+
         if menu.yasuomenu.Harass.e_gap_harass:get() and not player:spellSlot(2).state ~= 0 then
             local YasuoDistToTarget = player.pos:dist(target.object.pos)
             if YasuoDistToTarget > 450 then
@@ -484,7 +484,7 @@ local function harass()
                     qBuff = true
                 end
             end
-            if canE(target) and not qBuff then -- not qBuff = use only on first Q or windQ
+            if canE(target.object) and not qBuff then -- not qBuff = use only on first Q or windQ
                 if player.pos:dist(target.object.pos) <= player.attackRange + 50 and player.pos:dist(target.object.pos) <= 450 then
                     player:castSpell('obj', 2, target.object)
                 end

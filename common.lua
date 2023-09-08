@@ -4,6 +4,32 @@ local orb = module.internal("orb");
 
 common = {}
 
+local delayedActions, delayedActionsExecuter = {}, nil
+function common.DelayAction(func, delay, args) --delay in seconds
+  if not delayedActionsExecuter then
+    function delayedActionsExecuter()
+      for t, funcs in pairs(delayedActions) do
+        if t <= os.clock() then
+          for i = 1, #funcs do
+            local f = funcs[i]
+            if f and f.func then
+              f.func(unpack(f.args or {}))
+            end
+          end
+          delayedActions[t] = nil
+        end
+      end
+    end
+    cb.add(cb.tick, delayedActionsExecuter)
+  end
+  local t = os.clock() + (delay or 0)
+  if delayedActions[t] then
+    delayedActions[t][#delayedActions[t] + 1] = {func = func, args = args}
+  else
+    delayedActions[t] = {{func = func, args = args}}
+  end
+end
+
 -- Returns true if @object is valid target
 function common.IsValidTarget(object)
     return (object and not object.isDead and object.isVisible and object.isTargetable and not object.buff[17])

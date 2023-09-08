@@ -20,118 +20,121 @@ local function on_process_spell(spell)
         -- chat.print(spell.owner:spellSlot(5).name)
         -- chat.print(spell.name.." "..spell.owner.charName)
         for i, obj in pairs(common.GetEnemyHeroes()) do
-            if menu.utilitymenu.pings.ults[spell.owner.charName]:get() then
-                if spell.slot == spell.owner:spellSlot(_R).slot then
-                    if menu.utilitymenu.pings.chat_ult:get() then
-                        local time = game.time + spell.owner:spellSlot(_R).cooldown
-                        local minutes = math.floor(time / 60)
-                        local seconds = math.floor(time % 60)
-                        chat.send(spell.owner.charName.." used ult. Will be back on "..minutes..":"..seconds)
-                    end
-                end
-            end
-            if menu.utilitymenu.pings.summoner[spell.owner.charName.."4"]:get() then
-                if spell.slot == spell.owner:spellSlot(4).slot then
-                    if menu.utilitymenu.pings.chat_summoner:get() then
-                        local name = spell.name
-                        if spell.owner:spellSlot(4).name == "SummonerDot" then
-                            name = "ignite"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerHaste" then
-                            name = "ghost"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerHeal" then
-                            name = "heal"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerBoost" then
-                            name = "cleanse"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerExhaust" then
-                            name = "exhaust"
-                        end
-                        if string.find(spell.owner:spellSlot(4).name, "Smite") then
-                            name = "smite"
-                        end
-                        if string.find(spell.owner:spellSlot(4).name, "teleport") then
-                            name = "teleport"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerBarrier" then
-                            name = "barrier"
-                        end
-                        if spell.owner:spellSlot(4).name == "SummonerFlash" then
-                            name = "flash"
-                        end
-
-                        local time = 0
-                        if name == "smite" then
-                            -- -- chat.print(spell.owner:spellSlot(4).cooldown)
-                            -- -- chat.print(spell.owner:spellSlot(4).totalCooldown)
-                            -- -- chat.print(spell.owner:spellSlot(4).stacksCooldown)
-                            -- -- chat.print(spell.owner:spellSlot(4).stacks)
-                            -- if spell.owner:spellSlot(4).stacks > 0 then
-                            --     time = game.time + spell.owner:spellSlot(4).cooldown
-                            -- else
-                            --     time = game.time + spell.owner:spellSlot(4).stacksCooldown
-                            -- end
-                            -- local minutes = math.floor(time / 60)
-                            -- local seconds = math.floor(time % 60)
-                            -- chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
-                        else
-                            time = game.time + spell.owner:spellSlot(4).cooldown
+            if spell.owner == obj then
+                if menu.utilitymenu.pings.ults[spell.owner.charName]:get() then
+                    if spell.slot == spell.owner:spellSlot(_R).slot then
+                        if menu.utilitymenu.pings.chat_ult:get() then
+                            local time = game.time + spell.owner:spellSlot(_R).cooldown
                             local minutes = math.floor(time / 60)
                             local seconds = math.floor(time % 60)
-                            chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            chat.send(spell.owner.charName.." used ult. Will be back on "..minutes..":"..seconds)
                         end
                     end
                 end
-            end
-            if menu.utilitymenu.pings.summoner[spell.owner.charName.."5"]:get() then
-                if spell.slot == spell.owner:spellSlot(5).slot then
-                    if menu.utilitymenu.pings.chat_summoner:get() then
-                        local name = spell.name
-                        if spell.owner:spellSlot(5).name == "SummonerDot" then
-                            name = "ignite"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerHaste" then
-                            name = "ghost"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerHeal" then
-                            name = "heal"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerBoost" then
-                            name = "cleanse"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerExhaust" then
-                            name = "exhaust"
-                        end
-                        if string.find(spell.owner:spellSlot(5).name, "Smite") then
-                            name = "smite"
-                        end
-                        if string.find(spell.owner:spellSlot(5).name, "teleport") then
-                            name = "teleport"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerBarrier" then
-                            name = "barrier"
-                        end
-                        if spell.owner:spellSlot(5).name == "SummonerFlash" then
-                            name = "flash"
-                        end
+                if menu.utilitymenu.pings.summoner[spell.owner.charName.."4"]:get() then
+                    if spell.slot == spell.owner:spellSlot(4).slot then
+                        if menu.utilitymenu.pings.chat_summoner:get() then
+                            local name = spell.name
+                            if spell.owner:spellSlot(4).name == "SummonerDot" then
+                                name = "ignite"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerHaste" then
+                                name = "ghost"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerHeal" then
+                                name = "heal"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerBoost" then
+                                name = "cleanse"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerExhaust" then
+                                name = "exhaust"
+                            end
+                            if string.find(spell.owner:spellSlot(4).name, "Smite") then
+                                name = "smite"
+                            end
+                            if string.find(spell.owner:spellSlot(4).name, "teleport") then
+                                name = "teleport"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerBarrier" then
+                                name = "barrier"
+                            end
+                            if spell.owner:spellSlot(4).name == "SummonerFlash" then
+                                name = "flash"
+                            end
 
-                        local time = 0
-                        if name == "smite" then
-                            -- if spell.owner:spellSlot(5).stacks > 0 then
-                            --     time = game.time + spell.owner:spellSlot(5).cooldown
-                            -- else
-                            --     time = game.time + spell.owner:spellSlot(5).stacksCooldown
-                            -- end
-                            -- local minutes = math.floor(time / 60)
-                            -- local seconds = math.floor(time % 60)
-                            -- chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
-                        else
-                            time = game.time + spell.owner:spellSlot(5).cooldown
-                            local minutes = math.floor(time / 60)
-                            local seconds = math.floor(time % 60)
-                            chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            local time = 0
+                            if name == "smite" then
+                                -- -- chat.print(spell.owner:spellSlot(4).cooldown)
+                                -- -- chat.print(spell.owner:spellSlot(4).totalCooldown)
+                                -- -- chat.print(spell.owner:spellSlot(4).stacksCooldown)
+                                -- -- chat.print(spell.owner:spellSlot(4).stacks)
+                                -- if spell.owner:spellSlot(4).stacks > 0 then
+                                --     time = game.time + spell.owner:spellSlot(4).cooldown
+                                -- else
+                                --     time = game.time + spell.owner:spellSlot(4).stacksCooldown
+                                -- end
+                                -- local minutes = math.floor(time / 60)
+                                -- local seconds = math.floor(time % 60)
+                                -- chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            else
+                                time = game.time + spell.owner:spellSlot(4).cooldown
+                                local minutes = math.floor(time / 60)
+                                local seconds = math.floor(time % 60)
+                                chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            end
+                        end
+                    end
+                end
+                -- if not true then
+                if menu.utilitymenu.pings.summoner[spell.owner.charName.."5"]:get() then
+                    if spell.slot == spell.owner:spellSlot(5).slot then
+                        if menu.utilitymenu.pings.chat_summoner:get() then
+                            local name = spell.name
+                            if spell.owner:spellSlot(5).name == "SummonerDot" then
+                                name = "ignite"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerHaste" then
+                                name = "ghost"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerHeal" then
+                                name = "heal"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerBoost" then
+                                name = "cleanse"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerExhaust" then
+                                name = "exhaust"
+                            end
+                            if string.find(spell.owner:spellSlot(5).name, "Smite") then
+                                name = "smite"
+                            end
+                            if string.find(spell.owner:spellSlot(5).name, "teleport") then
+                                name = "teleport"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerBarrier" then
+                                name = "barrier"
+                            end
+                            if spell.owner:spellSlot(5).name == "SummonerFlash" then
+                                name = "flash"
+                            end
+
+                            local time = 0
+                            if name == "smite" then
+                                -- if spell.owner:spellSlot(5).stacks > 0 then
+                                --     time = game.time + spell.owner:spellSlot(5).cooldown
+                                -- else
+                                --     time = game.time + spell.owner:spellSlot(5).stacksCooldown
+                                -- end
+                                -- local minutes = math.floor(time / 60)
+                                -- local seconds = math.floor(time % 60)
+                                -- chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            else
+                                time = game.time + spell.owner:spellSlot(5).cooldown
+                                local minutes = math.floor(time / 60)
+                                local seconds = math.floor(time % 60)
+                                chat.send(spell.owner.charName.." used "..name..". Will be back on "..minutes..":"..seconds)
+                            end
                         end
                     end
                 end

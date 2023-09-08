@@ -2,35 +2,10 @@ local Dalandan_menu = {}
 local common = module.load("Dalandan_AIO", "common");
 
 local function menuReload() 
-  local delayedActions, delayedActionsExecuter = {}, nil
-  local function DelayAction(func, delay, args) --delay in seconds
-    if not delayedActionsExecuter then
-      function delayedActionsExecuter()
-        for t, funcs in pairs(delayedActions) do
-          if t <= os.clock() then
-            for i = 1, #funcs do
-              local f = funcs[i]
-              if f and f.func then
-                f.func(unpack(f.args or {}))
-              end
-            end
-            delayedActions[t] = nil
-          end
-        end
-      end
-      cb.add(cb.tick, delayedActionsExecuter)
-    end
-    local t = os.clock() + (delay or 0)
-    if delayedActions[t] then
-      delayedActions[t][#delayedActions[t] + 1] = {func = func, args = args}
-    else
-      delayedActions[t] = {{func = func, args = args}}
-    end
-  end
   local function reload()
       core.reload()
   end
-  DelayAction(reload,0.1)
+  common.DelayAction(reload,0.1)
 end
 
 Dalandan_menu.mainmenu = menu("Dalandan_Menu", "Dalandan AIO - Menu");
@@ -110,6 +85,21 @@ if Dalandan_menu.mainmenu.utility:get() then
         ::SummonerEnd::
       end
     end
+    Dalandan_menu.utilitymenu:menu("trollchat", "Troll Chat")
+    Dalandan_menu.utilitymenu.trollchat:header("troll_header","Every message sent is customizable")
+    Dalandan_menu.utilitymenu.trollchat:header("troll_header2","in file dalandan.txt")
+    Dalandan_menu.utilitymenu.trollchat:slider('troll_delay', 'Delay in writing message (ms) [WIP]', 1000, 0, 5000, 50 );
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_kill', 'Write random "kill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_death', 'Write random "death" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_assist', 'Write random "assist" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_minion_kill', 'Write random "minion kill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_double', 'Write random "doublekill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_triple', 'Write random "triplekill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_quadra', 'Write random "quadrakill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:boolean('troll_penta', 'Write random "pentakill" message', false);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind1', 'Write random "keybind1" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', 'Write random "keybind2" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', 'Write random "keybind3" message', nil,nil);
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
