@@ -13,6 +13,6 @@ Utilities:
 - Write in chat enemy summoner spells cooldowns
 - Troll chat (fully customizable, change texts in dalandan.txt)
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/08.09.2023/DalandanAIO.shard
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/11.09.2023/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
