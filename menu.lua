@@ -278,7 +278,7 @@ if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
     Dalandan_menu.xerathmenu.Combo:header('q_combo_header','Q settings')
     Dalandan_menu.xerathmenu.Combo:boolean('q_combo', 'Use Q', true);
-    Dalandan_menu.xerathmenu.Combo:dropdown('q_combo_when', 'Use Q time (if possible) [WIP]',2, {"Before W","After W"});
+    -- Dalandan_menu.xerathmenu.Combo:dropdown('q_combo_when', 'Use Q time (if possible) [WIP]',2, {"Before W","After W"});
     Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_q', 'Use slower prediction on Q', false);
     Dalandan_menu.xerathmenu.Combo:header('w_combo_header','W settings')
     Dalandan_menu.xerathmenu.Combo:boolean('w_combo', 'Use W', true);
@@ -311,7 +311,7 @@ if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu.Misc:header('killsteal_header','Killsteal settings')
     Dalandan_menu.xerathmenu.Misc:boolean('q_ks', 'Use Q to Killsteal', true);
     Dalandan_menu.xerathmenu.Misc:boolean('w_ks', 'Use W to Killsteal', true);
-    Dalandan_menu.xerathmenu.Misc:header('r_header','R settings')
+    -- Dalandan_menu.xerathmenu.Misc:header('r_header','R settings')
 
     --draw
     Dalandan_menu.xerathmenu:menu("Draw", "Drawing");

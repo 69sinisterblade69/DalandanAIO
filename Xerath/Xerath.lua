@@ -1,10 +1,11 @@
 local orb = module.internal("orb");
 local ts = module.internal("TS");
 local pred = module.internal("pred");
+local damagelib = module.internal("damagelib");
 
 local common = module.load("Dalandan_AIO", "common");
 local menu = module.load("Dalandan_AIO", "menu");
-
+common.spellNames()
 local q = {
     width = 140,
     speed = math.huge,
@@ -100,7 +101,7 @@ local r_cast = 0
 local slow_pred_q = menu.xerathmenu.Combo.slow_pred_q:get()
 local slow_pred_w = menu.xerathmenu.Combo.slow_pred_w:get()
 -- local slow_pred_e = menu.xerathmenu.Combo.slow_pred_e:get()
-local slow_pred_r = menu.xerathmenu.Combo.slow_pred_q:get()
+local slow_pred_r = menu.xerathmenu.Combo.slow_pred_r:get()
 
 
 local function trace_filter_w(seg, obj)
@@ -185,9 +186,6 @@ local function ts_filter_q_max(res, object, dist)
         local seg = pred.linear.get_prediction(q, object)
         if not seg then return false end
         if seg.startPos:dist(seg.endPos) > q.maxRange * 0.9 then return false end
-        if slow_pred_q then
-            if not trace_filter_q(seg, object) then return false end
-        end
         res.pos = seg.endPos
         res.object = object
         return true
@@ -297,14 +295,15 @@ local function killsteal()
     if menu.xerathmenu.Misc.q_ks:get() then
         if not player:spellSlot(0).state~=0 and player:spellSlot(0).isCharging then
             local resQ = ts.get_result(ts_filter_q)
-            if resQ.pos and resQ.object.health <= q.damage() * common.MagicReduction(resQ.object, player) then
+            -- if resQ.pos and resQ.object.health <= q.damage() * common.MagicReduction(resQ.object, player) then
+            if resQ.pos and resQ.object.health <= damagelib.get_spell_damage('XerathArcanopulseChargeUp', 0, player, resQ.object, false, 0) then    
                 if not orb.core.is_spell_locked()then
                     player:castSpell('release', 0, vec3(resQ.pos.x, mousePos.y, resQ.pos.y))
                 end
             end
         elseif not player:spellSlot(0).state~=0 then
             local resQ = ts.get_result(ts_filter_q_max)
-            if resQ.pos and resQ.object.health <= q.damage() * common.MagicReduction(resQ.object, player) then
+            if resQ.pos and resQ.object.health <= damagelib.get_spell_damage('XerathArcanopulseChargeUp', 0, player, resQ.object, false, 0) then
                 if not orb.core.is_spell_locked() then
                     player:castSpell('line', 0, player.pos, mousePos)
                 end
@@ -314,7 +313,7 @@ local function killsteal()
     if menu.xerathmenu.Misc.w_ks:get() then
         if not player:spellSlot(1).state~=0 then
             local resW = ts.get_result(ts_filter_w)
-            if resW.pos and resW.object.health <= w.damage() * common.MagicReduction(resW.object, player) then
+            if resW.pos and resW.object.health <= damagelib.get_spell_damage('XerathArcaneBarrage2', 1, player, resW.object, false, 0) then
                 if not orb.core.is_spell_locked() then
                     player:castSpell('pos', 1, vec3(resW.pos.x, mousePos.y, resW.pos.y))
                 end
@@ -443,12 +442,14 @@ local function gapClose()
         local seg = {}
 		local target = ts.get_result(ts_filter_e_gap).object
 		if target then
-			local pred_pos = pred.core.lerp(target.path, network.latency + e.delay, target.path.dashSpeed)
-			if pred_pos and pred_pos:dist(player.path.serverPos2D) <= e.range then
+			-- local pred_pos = pred.core.lerp(target.path, network.latency + e.delay, target.path.dashSpeed)
+            local pred_seg = pred.linear.get_prediction(e, target, player)
+			if pred_seg and pred_seg.endPos:dist(player.path.serverPos2D) <= e.range then
 				seg.startPos = player.path.serverPos2D
-				seg.endPos = vec2(pred_pos.x, pred_pos.y)
+				-- seg.endPos = vec2(pred_pos.x, pred_pos.y)
+                seg.endPos = pred_seg.endPos
 				if not pred.collision.get_prediction(e, seg, target.pos:to2D()) then
-					player:castSpell("pos", 2, vec3(pred_pos.x, target.y, pred_pos.y))
+					player:castSpell("pos", 2, vec3(seg.endPos.x, target.y, seg.endPos.y))
 				end
 			end
 		end    
@@ -459,8 +460,9 @@ end
 local function interrupt(spell)
     if menu.xerathmenu.Misc.e_int:get() then
         if spell then
-            if common.IsEnemyHero(spell.owner) then
-                return
+            if common.IsEnemyHero(spell.owner) and not spell.isBasicAttack then
+                -- print(spell.owner.charName,spell.name, spell.windUpTime, spell.clientWindUpTime, spell.animationTime, spell.owner:spellSlot(spell.slot).startTimeForCurrentCast)
+                -- print(spell.owner.charName,spell.name, spell.animationTime, )
             end
         end
     end
@@ -525,88 +527,62 @@ local function on_draw()
         
         local r_shots = 0
         if r.shots() ~= 0 then
-            r_shots = r.shots()            
+            r_shots = r.shots()
         else
             r_shots = r.maxShots
         end
-
-        -- just copied common.damageindicator cuz im lazy lol
-        local range = r.range
-        local range_min = q.maxRange * 1.5
-        local tooltip = "In R indicator" --"Killable in: "..i.." shots"
-        local killable = 0
-
-        for i=0, objManager.enemies_n-1 do
-            local obj = objManager.enemies[i]
-            if common.IsValidTarget(obj) and obj.isOnScreen and ((obj.pos:dist(player.pos) <= range and obj.pos:dist(player.pos) > range_min) or r.shots() ~= 0) then 
-                
-                local kill_shots = 0
-                local damage
-                local hpBar = obj.barPos
-
-                for i=1,r_shots do
-                    damage = r.damage() * i
-                    damage = common.MagicReduction(obj, player) * damage
-                    
-                    if damage > obj.health then
-                        killable = 1
-                        kill_shots = i
-                        goto shit
+        -- chat.print(r_shots)
+        for i,obj in pairs(common.GetEnemyHeroes()) do
+            local damage = 0
+            local killable = false
+            local kill_shots = 0
+            local showR = false
+            if (player.pos:dist(obj.pos) > q.maxRange * 1.5) or r.shots() ~= 0 then
+                showR = true
+            end
+            if not showR then
+                if menu.xerathmenu.Draw.dmg_draw_ready:get() then
+                    if menu.xerathmenu.Draw.q_draw_dmg:get() and player:spellSlot(0).state == 0 then
+                        damage = damage + damagelib.get_spell_damage('XerathArcanopulseChargeUp', 0, player, obj, false, 0)
+                    end
+                    if menu.xerathmenu.Draw.w_draw_dmg:get() and player:spellSlot(1).state == 0 then
+                        damage = damage + damagelib.get_spell_damage('XerathArcaneBarrage2', 1, player, obj, false, 0)
+                    end
+                    if menu.xerathmenu.Draw.e_draw_dmg:get() and player:spellSlot(2).state == 0 then
+                        damage = damage + damagelib.get_spell_damage('XerathMageSpear', 2, player, obj, false, 0)
+                    end
+                else
+                    if menu.xerathmenu.Draw.q_draw_dmg:get() then
+                        damage = damage + damagelib.get_spell_damage('XerathArcanopulseChargeUp', 0, player, obj, false, 0)
+                    end
+                    if menu.xerathmenu.Draw.w_draw_dmg:get() then
+                        damage = damage + damagelib.get_spell_damage('XerathArcaneBarrage2', 1, player, obj, false, 0)
+                    end
+                    if menu.xerathmenu.Draw.e_draw_dmg:get() then
+                        damage = damage + damagelib.get_spell_damage('XerathMageSpear', 2, player, obj, false, 0)
                     end
                 end
-                ::shit::                
-                local damagePercentage = 0
-                if (obj.health - damage) > 0 then 
-                    damagePercentage =  (obj.health - damage) / obj.maxHealth
+                common.damageIndicatorUpdated(damage, obj)
+            else
+                local killShots = 0
+                for j=1, r_shots do 
+                    damage = math.max(damagelib.get_spell_damage('XerathLocusOfPower2', 3, player, obj, false, 0) * j, damagelib.get_spell_damage('XerathRMissileWrapper', 3, player, obj, false, 0) * j)
+                    if player.buff["xerathrrampup"] then
+                        damage = damage + (player.buff["xerathrrampup"].stacks2 * (20 + player:spellSlot(3).level * 5) + 0.05 * common.GetTotalAP(player))
+                    end
+                    
+                    if damage > obj.health then
+                        killShots = j
+                        break
+                    end
                 end
-                local currentHealthPercentage = obj.health / obj.maxHealth
-
-                local startPoint = vec2(hpBar.x + 163 + currentHealthPercentage * 104 , hpBar.y + 123);
-                local endPoint = vec2(hpBar.x + 163 + damagePercentage * 104, hpBar.y + 123);
-                
-                if killable == 1 then
-                    graphics.draw_text_2D("KILLABLE IN "..kill_shots.." SHOTS", 18, hpBar.x + 160, hpBar.y + 90, 0xFFFF0000)
-                    graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
-                    graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA07DFE33)
+                if killShots ~= 0 and player:spellSlot(3).level ~= 0 then
+                    common.damageIndicatorUpdated(damage, obj,100000,0,"Killable in "..killShots.." shots")
                 else
-                    graphics.draw_text_2D("KILLABLE: NO", 18, hpBar.x + 160, hpBar.y + 90, 0xFFEDCE34)
-                    graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
-                    graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA0EDCE34)
+                    common.damageIndicatorUpdated(damage, obj,100000,0,"In "..r_shots.." shots")
                 end
             end
         end
-        
-        
-        local damageM = 0
-        local damageP = 0
-        local v = graphics.world_to_screen(player.pos)
-        
-        if menu.xerathmenu.Draw.dmg_draw_ready:get() then
-            if menu.xerathmenu.Draw.q_draw_dmg:get() and player:spellSlot(0).state == 0 then
-                damageM = damageM + q.damage()
-            end
-            if menu.xerathmenu.Draw.w_draw_dmg:get() and player:spellSlot(1).state == 0 then
-                damageM = damageM + w.damage()
-            end
-            if menu.xerathmenu.Draw.e_draw_dmg:get() and player:spellSlot(2).state == 0 then
-                damageM = damageM + e.damage()
-            end
-        else
-            if menu.xerathmenu.Draw.q_draw_dmg:get() then
-                damageM = damageM + q.damage()
-            end
-            if menu.xerathmenu.Draw.w_draw_dmg:get() then
-                damageM = damageM + w.damage()
-            end
-            if menu.xerathmenu.Draw.e_draw_dmg:get() then
-                damageM = damageM + e.damage()
-            end
-        end
-        if killable==0 then
-            common.damageIndicator(damageM, damageP, q.maxRange * 1.5,0)
-        end
-        
-
     end
 end
 
@@ -616,7 +592,7 @@ local function on_process_spell(spell)
     if spell.owner == player then
         -- print(spell.name)
     end
-    interrupt()
+    interrupt(spell)
     if spell.owner == player and spell.name == "XerathArcanopulseChargeUp" then
         q_cast = os.clock() -0.25
     end

@@ -1,4 +1,4 @@
-chat.print('[Dalandan AIO] RELEASE 08.09.2023 Loading...')
+chat.print('[Dalandan AIO] RELEASE 11.09.2023 Loading...')
 chat.print('[Dalandan AIO] https://discord.gg/9cxRCHYR4y')
 chat.print('[Dalandan AIO] https://github.com/69sinisterblade69/DalandanAIO')
 
@@ -31,6 +31,9 @@ if player.charName == "Xerath" and menu.mainmenu.champion:get() then
 end
 if player.charName == "Yasuo" and menu.mainmenu.champion:get() then
     champ = module.load("Dalandan_AIO", "Yasuo/Yasuo2");
+end
+if player.charName == "Graves" and menu.mainmenu.champion:get() then
+    champ = module.load("Dalandan_AIO", "graves");
 end
 -- if player.charName == "Zed" and menu.mainmenu.champion:get() then
 --     champ = module.load("Dalandan_AIO", "Zed");

@@ -270,6 +270,44 @@ function common.damageIndicator(damageM,damageP,range_max,range_min,tooltip)
     end
 end
 
+-- pure M and P dmg  with runes and items and shit but no armor/spellblock
+-- range_max is optional
+-- range_min is optional
+-- tooltip is optional
+function common.damageIndicatorUpdated(damage,target,range_max,range_min,tooltip)
+    local range = range_max or 100000
+    local range_min = range_min or 0
+    local tooltip = tooltip or ""
+    if common.IsValidTarget(target) and target.isOnScreen and target.pos:dist(player.pos) <= range and target.pos:dist(player.pos) > range_min then 
+        local hpBar = target.barPos
+
+        local damagePercentage = 0
+        if (target.health - damage) > 0 then 
+            damagePercentage =  (target.health - damage) / target.maxHealth
+        end
+        local currentHealthPercentage = target.health / target.maxHealth
+
+        local startPoint = vec2(hpBar.x + 163 + currentHealthPercentage * 104 , hpBar.y + 123);
+        local endPoint = vec2(hpBar.x + 163 + damagePercentage * 104, hpBar.y + 123);
+        if damage > target.health then
+            graphics.draw_text_2D("KILLABLE: YES", 18, hpBar.x + 160, hpBar.y + 90, 0xFFFF0000)
+            graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
+            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA07DFE33)
+        else
+            graphics.draw_text_2D("KILLABLE: NO", 18, hpBar.x + 160, hpBar.y + 90, 0xFFEDCE34)
+            graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
+            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA0EDCE34)
+        end
+    end
+end
+
+function common.spellNames()
+    print(player:spellSlot(0).name)
+    print(player:spellSlot(1).name)
+    print(player:spellSlot(2).name)
+    print(player:spellSlot(3).name)
+end
+
 common.champs = {
     --   Lux = true;
     --   Malphite = true;
@@ -289,10 +327,10 @@ return common
 --     local obj = objManager.get(j)
 --     if obj and obj.type==TYPE_HERO then
 --         local hpBar = obj.barPos
---         local buff_keys = player.buff.keys
+--         local buff_keys = obj.buff.keys
 --         for i = 1, buff_keys.n do
 --             local buff_key = buff_keys[i]
---             local buff = player.buff[buff_key]
+--             local buff = obj.buff[buff_key]
 --             if buff and buff.valid then 
 --                 local string = "Name: "..buff.name.." Type: "..buff.type.." Stacks: "..buff.stacks.." Stacks2: "..buff.stacks2
 --                 graphics.draw_text_2D(string, 18, hpBar.x + 160, hpBar.y + 70 + 15*i, 0xFFFFFFFF)
