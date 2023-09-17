@@ -10,6 +10,7 @@ shard = {
     'TwistedFate/TwistedFate',
     'Xerath/Xerath',
     'Yasuo/Yasuo2',
+    'Yone/Yone',
 },
 flag = {
   text = "Dalandan AIO",
@@ -26,10 +27,12 @@ resources = {
   'Sprites/Misc.png', 
   'Sprites/icon minions dark.png',
   'Sprites/icon minions light.png',
-  
+  'Sprites/Yone.png',
+
   'TwistedFate/TwistedFate.png',
   'Yasuo/Yasuo.png',
   'Xerath/Xerath.png',
+  'Yone/Yone.png',
 },
   load = function()
     return true; 

@@ -311,7 +311,9 @@ if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu.Misc:header('killsteal_header','Killsteal settings')
     Dalandan_menu.xerathmenu.Misc:boolean('q_ks', 'Use Q to Killsteal', true);
     Dalandan_menu.xerathmenu.Misc:boolean('w_ks', 'Use W to Killsteal', true);
-    -- Dalandan_menu.xerathmenu.Misc:header('r_header','R settings')
+    Dalandan_menu.xerathmenu.Misc:header('keybind_header','Keybinds')
+    Dalandan_menu.xerathmenu.Misc:keybind('farm_key', 'Farm toggle', nil, 'A');
+    Dalandan_menu.xerathmenu.Misc:keybind('aa_key', 'Stop aa toggle', nil, 'Z');
 
     --draw
     Dalandan_menu.xerathmenu:menu("Draw", "Drawing");
@@ -422,5 +424,40 @@ if player.charName == "Yasuo" and Dalandan_menu.mainmenu.champion:get() then
     -- Dalandan_menu.yasuomenu.Draw:boolean('e_draw', 'Draw E', true);
     Dalandan_menu.yasuomenu.Draw:boolean('r_draw', 'Draw R', true);
 
+end
+if player.charName == "Yone" and Dalandan_menu.mainmenu.champion:get() then
+    Dalandan_menu.yonemenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+    Dalandan_menu.yonemenu:set('icon',graphics.sprite('Yone/Yone.png'))
+
+    Dalandan_menu.yonemenu:menu("Combo", "Combo");
+    Dalandan_menu.yonemenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
+    Dalandan_menu.yonemenu.Combo:boolean("q_combo","Use Q", true)
+    Dalandan_menu.yonemenu.Combo:boolean("w_combo","Use W", true)
+    Dalandan_menu.yonemenu.Combo:boolean("e_combo","Use E", true)
+    Dalandan_menu.yonemenu.Combo:boolean("r_combo","Use R", true)
+
+    Dalandan_menu.yonemenu:menu("Lane", "Lane");
+    Dalandan_menu.yonemenu.Lane:set('icon',graphics.sprite('Sprites/icon minions light.png'))
+    -- Dalandan_menu.yonemenu.Lane:boolean("q_lasthit","Use Q to lasthit", true)
+    Dalandan_menu.yonemenu.Lane:boolean("q_laneclear","Use Q to laneclear", true)
+    Dalandan_menu.yonemenu.Lane:boolean("w_laneclear","Use W to laneclear", true)
+    Dalandan_menu.yonemenu.Lane:boolean("q_jungle","Use Q to jungle", true)
+    Dalandan_menu.yonemenu.Lane:boolean("w_jungle","Use W to jungle", true)
+
+    Dalandan_menu.yonemenu:menu("Misc", "Misc");
+    Dalandan_menu.yonemenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
+    Dalandan_menu.yonemenu.Misc:boolean("q_ks","Use Q to killsteal", true)
+    Dalandan_menu.yonemenu.Misc:boolean("w_ks","Use W to killsteal", true)
+    Dalandan_menu.yonemenu.Misc:boolean("r_ks","Use R to killsteal", true)
+    Dalandan_menu.yonemenu.Misc:keybind('r_semi', 'Semi R', 'T',nil);
+
+    Dalandan_menu.yonemenu:menu("Draw", "Draw");
+    Dalandan_menu.yonemenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
+    Dalandan_menu.yonemenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
+    Dalandan_menu.yonemenu.Draw:boolean('q_draw', 'Draw Q', true);
+    Dalandan_menu.yonemenu.Draw:boolean('w_draw', 'Draw W', false);
+    Dalandan_menu.yonemenu.Draw:boolean('e_draw', 'Draw E', false);
+    Dalandan_menu.yonemenu.Draw:boolean('r_draw', 'Draw R', true);
+    Dalandan_menu.yonemenu.Draw:boolean('dmg_draw', 'Show damage on hp bar', true);
 end
 return Dalandan_menu

@@ -5,7 +5,8 @@ local damagelib = module.internal("damagelib");
 
 local common = module.load("Dalandan_AIO", "common");
 local menu = module.load("Dalandan_AIO", "menu");
-common.spellNames()
+-- common.spellNames()
+
 local q = {
     width = 140,
     speed = math.huge,
@@ -65,7 +66,7 @@ local e = {
 local r = {
     delay = 0.627,
     range = 5000,
-    radius = 200,
+    radius = 170,
     speed = math.huge,
     stacks = 0,
     boundingRadiusMod = 1, -- ????
@@ -323,69 +324,71 @@ local function killsteal()
 end
 
 local function laneClear()
-    if menu.xerathmenu.Lane.q_lane:get() then
-        local minion_hits = 0
-        local max_hits = 0
-        local max_minion = {}
-        local req_range = 0
-        for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
-            local obj = objManager.minions[TEAM_ENEMY][i]
-            if obj.pos:dist(player.pos) <= q.maxRange and obj.type == TYPE_MINION and not obj.isDead and obj.health and obj.health > 0 and obj.isVisible then
-                minion_hits = 0
-                for j=0, objManager.minions.size[TEAM_ENEMY]-1 do
-                    local obj2 = objManager.minions[TEAM_ENEMY][j]
-                    if obj2.pos:dist(player.pos) <= q.maxRange and obj2.type == TYPE_MINION and not obj2.isDead and obj2.health and obj2.health > 0 and obj2.isVisible and obj2.isTargetable then
-                        local p = mathf.closest_vec_line(obj2.pos2D, player.pos2D, obj.pos2D)
-                        local res = obj2.pos2D:dist(p)
-                        if res <= q.width + obj2.boundingRadius then
-                            minion_hits = minion_hits + 1
+    if menu.xerathmenu.Misc.farm_key:get() then
+        if menu.xerathmenu.Lane.q_lane:get() then
+            local minion_hits = 0
+            local max_hits = 0
+            local max_minion = {}
+            local req_range = 0
+            for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
+                local obj = objManager.minions[TEAM_ENEMY][i]
+                if obj.pos:dist(player.pos) <= q.maxRange and obj.type == TYPE_MINION and not obj.isDead and obj.health and obj.health > 0 and obj.isVisible then
+                    minion_hits = 0
+                    for j=0, objManager.minions.size[TEAM_ENEMY]-1 do
+                        local obj2 = objManager.minions[TEAM_ENEMY][j]
+                        if obj2.pos:dist(player.pos) <= q.maxRange and obj2.type == TYPE_MINION and not obj2.isDead and obj2.health and obj2.health > 0 and obj2.isVisible and obj2.isTargetable then
+                            local p = mathf.closest_vec_line(obj2.pos2D, player.pos2D, obj.pos2D)
+                            local res = obj2.pos2D:dist(p)
+                            if res <= q.width + obj2.boundingRadius then
+                                minion_hits = minion_hits + 1
+                            end
                         end
                     end
-                end
-                if max_hits <= minion_hits then
-                    max_hits = minion_hits
-                    max_minion = obj
-                end
-            end
-        end
-        if max_minion then
-            -- chat.print(max_hits)
-            if not player:spellSlot(0).state~=0 and player:spellSlot(0).isCharging and max_minion.pos:dist(player.pos) <= q.range then
-                if not orb.core.is_spell_locked() then
-                    player:castSpell('release', 0, vec3(max_minion.pos.x, mousePos.y, max_minion.pos.z))
-                end
-            elseif not player:spellSlot(0).state~=0 and not orb.core.is_spell_locked() and max_hits >= menu.xerathmenu.Lane.q_lane_minion:get() then
-                player:castSpell('line', 0, player.pos, mousePos)
-            end
-        end
-    end
-    if menu.xerathmenu.Lane.w_lane:get() then
-        local minion_hits = 0
-        local max_hits = 0
-        local max_minion = {}
-        local minions = {}
-        for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
-            minions[i] = objManager.minions[TEAM_ENEMY][i]
-        end
-        for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
-            local obj = objManager.minions[TEAM_ENEMY][i]
-            if obj.pos:dist(player.pos) <= w.range + w.radius/2 and obj.type == TYPE_MINION and not obj.isDead and obj.health and obj.health > 0 and obj.isVisible then
-                minion_hits = 0
-                for j=0, objManager.minions.size[TEAM_ENEMY]-1 do
-                    local obj2 = objManager.minions[TEAM_ENEMY][j]
-                    if obj2.pos:dist(player.pos) <= w.range + w.radius/2 and obj2.type == TYPE_MINION and not obj2.isDead and obj2.health and obj2.health > 0 and obj2.isVisible and obj2.isTargetable then
-                        minion_hits = common.CountMinionsNearPos(obj2.pos,w.radius,minions,TEAM_ENEMY)
+                    if max_hits <= minion_hits then
+                        max_hits = minion_hits
+                        max_minion = obj
                     end
                 end
-                if max_hits <= minion_hits then
-                    max_hits = minion_hits
-                    max_minion = obj
+            end
+            if max_minion then
+                -- chat.print(max_hits)
+                if not player:spellSlot(0).state~=0 and player:spellSlot(0).isCharging and max_minion.pos:dist(player.pos) <= q.range then
+                    if not orb.core.is_spell_locked() then
+                        player:castSpell('release', 0, vec3(max_minion.pos.x, mousePos.y, max_minion.pos.z))
+                    end
+                elseif not player:spellSlot(0).state~=0 and not orb.core.is_spell_locked() and max_hits >= menu.xerathmenu.Lane.q_lane_minion:get() then
+                    player:castSpell('line', 0, player.pos, mousePos)
                 end
             end
         end
-        if max_minion and max_hits >= 3 then
-            if not orb.core.is_spell_locked() then
-                player:castSpell('pos', 1, vec3(max_minion.pos.x, mousePos.y, max_minion.pos.z))
+        if menu.xerathmenu.Lane.w_lane:get() then
+            local minion_hits = 0
+            local max_hits = 0
+            local max_minion = {}
+            local minions = {}
+            for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
+                minions[i] = objManager.minions[TEAM_ENEMY][i]
+            end
+            for i=0, objManager.minions.size[TEAM_ENEMY]-1 do
+                local obj = objManager.minions[TEAM_ENEMY][i]
+                if obj.pos:dist(player.pos) <= w.range + w.radius/2 and obj.type == TYPE_MINION and not obj.isDead and obj.health and obj.health > 0 and obj.isVisible then
+                    minion_hits = 0
+                    for j=0, objManager.minions.size[TEAM_ENEMY]-1 do
+                        local obj2 = objManager.minions[TEAM_ENEMY][j]
+                        if obj2.pos:dist(player.pos) <= w.range + w.radius/2 and obj2.type == TYPE_MINION and not obj2.isDead and obj2.health and obj2.health > 0 and obj2.isVisible and obj2.isTargetable then
+                            minion_hits = common.CountMinionsNearPos(obj2.pos,w.radius,minions,TEAM_ENEMY)
+                        end
+                    end
+                    if max_hits <= minion_hits then
+                        max_hits = minion_hits
+                        max_minion = obj
+                    end
+                end
+            end
+            if max_minion and max_hits >= 3 then
+                if not orb.core.is_spell_locked() then
+                    player:castSpell('pos', 1, vec3(max_minion.pos.x, mousePos.y, max_minion.pos.z))
+                end
             end
         end
     end
@@ -469,11 +472,13 @@ local function interrupt(spell)
 end
 
 local function auto_r()
-    if r.shots() ~= 0 then
-        local resR = ts.get_result(ts_filter_r)
-        if resR.pos then
-            if not orb.core.is_spell_locked() then
-                player:castSpell('pos', 3, vec3(resR.pos.x, mousePos.y, resR.pos.y))
+    if menu.xerathmenu.Combo.r_use:get() then
+        if r.shots() ~= 0 then
+            local resR = ts.get_result(ts_filter_r)
+            if resR.pos then
+                if not orb.core.is_spell_locked() then
+                    player:castSpell('pos', 3, vec3(resR.pos.x, mousePos.y, resR.pos.y))
+                end
             end
         end
     end
@@ -495,6 +500,11 @@ local function on_tick()
     end 
     if orb.menu.lane_clear.key:get() then
         laneClear()
+    end
+    if menu.xerathmenu.Misc.aa_key:get() then
+        
+    else
+        orb.core.set_pause_attack(0.5)
     end
     
 end
@@ -583,6 +593,16 @@ local function on_draw()
                 end
             end
         end
+    end
+    if menu.xerathmenu.Misc.farm_key:get() then
+        graphics.draw_text_2D("Farm: [ON]",16,graphics.width/2,graphics.height/2+100,0xFF44FF44)
+    else
+        graphics.draw_text_2D("Farm: [OFF]",16,graphics.width/2,graphics.height/2+100,0xFFFF4444)
+    end
+    if menu.xerathmenu.Misc.aa_key:get() then
+        -- graphics.draw_text_2D("AA: [ON]",16,graphics.width/2,graphics.height/2+120,0xFF44FF44)
+    else
+        graphics.draw_text_2D("AA Disabled",16,graphics.width/2,graphics.height/2+120,0xFFFF4444)
     end
 end
 
