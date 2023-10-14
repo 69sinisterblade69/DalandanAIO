@@ -30,6 +30,22 @@ function common.DelayAction(func, delay, args) --delay in seconds
   end
 end
 
+local _intervalFunction
+function common.SetInterval(userFunction, timeout, count, params)
+  if not _intervalFunction then
+    function _intervalFunction(userFunction, startTime, timeout, count, params)
+      if userFunction(unpack(params or {})) ~= false and (not count or count > 1) then
+        common.DelayAction(
+          _intervalFunction,
+          (timeout - (os.clock() - startTime - timeout)),
+          {userFunction, startTime + timeout, timeout, count and (count - 1), params}
+        )
+      end
+    end
+  end
+  common.DelayAction(_intervalFunction, timeout, {userFunction, os.clock(), timeout or 0, count, params})
+end
+
 -- Returns true if @object is valid target
 function common.IsValidTarget(object)
     return (object and not object.isDead and object.isVisible and object.isTargetable and not object.buff[17])

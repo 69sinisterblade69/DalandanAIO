@@ -364,57 +364,79 @@ end
 if player.charName == "Yasuo" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
     Dalandan_menu.yasuomenu:set('icon',graphics.sprite('Yasuo/Yasuo.png'))
-    --------------- not mine (dominationAIO/Yasuo and Yone) ---------------
-    -- Dalandan_menu.yasuomenu:menu("Qcombo", "Yasuo_Q Combo");
-    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
-    -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Windcombo', 'Yasuo Wind in Combo', true);
-    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qaa', 'Q After AA', false);
-    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qba', 'Q Before AA', false);
-    -- -- Dalandan_menu.yasuo.Qcombo:boolean('Yasuo_Qalways', 'Q always in combo', true);
-    -- Dalandan_menu.yasuo.Qcombo:slider('Yasuo_Qoa', 'Q Cancel aa', 30, 0, 100, 1);
 
-    -- Dalandan_menu.yasuomenu:menu("Ecombo", "Yasuo_E Combo");
-    -- Dalandan_menu.yasuo.Ecombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
-    -- Dalandan_menu.yasuo.Ecombo:boolean('Yasuo_Qcombo', 'Yasuo Q in Combo', true);
+    -- --------------- new shit (old) ---------------
+    -- Dalandan_menu.yasuomenu:menu("Combo", "Combo");
+    -- Dalandan_menu.yasuomenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
+    -- Dalandan_menu.yasuomenu.Combo:boolean("q_combo","Use Q", true)
+    -- Dalandan_menu.yasuomenu.Combo:boolean("e_combo","Use E", true)
+    -- Dalandan_menu.yasuomenu.Combo:boolean("e_gap_combo","Use E as gapcloser", true)
+    -- Dalandan_menu.yasuomenu.Combo:boolean("r_combo","Use R", true)
+    -- Dalandan_menu.yasuomenu.Combo:slider("r_enemy_hp","R if enemy %HP is < this value",60,1,100,1)
+    -- Dalandan_menu.yasuomenu.Combo:slider("r_yasuo_hp","R if your %HP > target %HP by this much",15,1,100,1)
+    -- Dalandan_menu.yasuomenu.Combo.r_yasuo_hp:set('tooltip','Recommended value is between 10-20')
 
-    -- Dalandan_menu.yasuomenu:menu("EQcombo", "Yasuo_EQ Combo");
-    -- Dalandan_menu.yasuo.EQcombo:boolean('Yasuo_EQcombo', 'Yasuo EQ in Combo', true);
-    -- Dalandan_menu.yasuo.EQcombo:boolean('Yasuo_EWindcombo', 'Yasuo EQ Wind in Combo', true);
+    -- Dalandan_menu.yasuomenu:menu("Harass", "Harass");
+    -- Dalandan_menu.yasuomenu.Harass:set('icon',graphics.sprite('Sprites/Harass.png'))
+    -- Dalandan_menu.yasuomenu.Harass:boolean("q_harass","Use Q", true)
+    -- Dalandan_menu.yasuomenu.Harass:boolean("e_harass","Use E", true)
+    -- Dalandan_menu.yasuomenu.Harass:boolean("e_gap_harass","Use E as gapcloser with minions", true)
 
-    -- Dalandan_menu.yasuomenu:menu("Rcombo", "Yasuo_R Combo");
+    -- Dalandan_menu.yasuomenu:menu("Misc", "Misc");
+    -- Dalandan_menu.yasuomenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
+    -- -- Dalandan_menu.yasuomenu.Misc:boolean("EEvade", "Use E evade",true);
+    -- Dalandan_menu.yasuomenu.Misc:keybind('flee_key', 'Flee', 'Z', nil);
+    -- Dalandan_menu.yasuomenu.Misc:boolean("q_laneclear_stack","Use Q to stack in laneclear", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("e_laneclear","Use E in laneclear", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("q_lasthit","Use Q in lasthit", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("e_lasthit","Use E in lasthit", true)
 
-    -- -- Dalandan_menu.yasuomenu:menu("Wcombo", "Yasuo_W Combo");
-    -- -- Dalandan_menu.yasuo.Wcombo:boolean('Yasuo_Wcombo', 'Yasuo W in Combo', true);
+    -- Dalandan_menu.yasuomenu:menu("Draw", "Draw");
+    -- Dalandan_menu.yasuomenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
+    -- Dalandan_menu.yasuomenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
+    -- Dalandan_menu.yasuomenu.Draw:boolean('q_draw', 'Draw Q', true);
+    -- -- Dalandan_menu.yasuomenu.Draw:boolean('w_draw', 'Draw W', true);
+    -- -- Dalandan_menu.yasuomenu.Draw:boolean('e_draw', 'Draw E', true);
+    -- Dalandan_menu.yasuomenu.Draw:boolean('r_draw', 'Draw R', true);
 
-    -- Dalandan_menu.yasuomenu:menu("ysClear", "Clear Settings");
-
-    -- Dalandan_menu.yasuomenu:menu("yskeys", "All Key Settings");
-
-    --------------- new shit (mine + private) ---------------
+    --------------- newer shit (mine) ---------------
     Dalandan_menu.yasuomenu:menu("Combo", "Combo");
     Dalandan_menu.yasuomenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
-    Dalandan_menu.yasuomenu.Combo:boolean("q_combo","Use Q", true)
-    Dalandan_menu.yasuomenu.Combo:boolean("e_combo","Use E", true)
-    Dalandan_menu.yasuomenu.Combo:boolean("e_gap_combo","Use E as gapcloser", true)
-    Dalandan_menu.yasuomenu.Combo:boolean("r_combo","Use R", true)
+    Dalandan_menu.yasuomenu.Combo:header("r_header","R settings")
+    -- Dalandan_menu.yasuomenu.Combo:boolean("r_combo","Use R", true)
+    Dalandan_menu.yasuomenu.Combo:keybind('r_combo', 'Auto R', nil, 'G');
     Dalandan_menu.yasuomenu.Combo:slider("r_enemy_hp","R if enemy %HP is < this value",60,1,100,1)
     Dalandan_menu.yasuomenu.Combo:slider("r_yasuo_hp","R if your %HP > target %HP by this much",15,1,100,1)
     Dalandan_menu.yasuomenu.Combo.r_yasuo_hp:set('tooltip','Recommended value is between 10-20')
+    Dalandan_menu.yasuomenu.Combo:boolean("r_safety","Don't waste R on killable [WIP]", true)
+    Dalandan_menu.yasuomenu.Combo.r_safety:set('tooltip','Dont use R if target is killable')
+    Dalandan_menu.yasuomenu.Combo:boolean("airblade","Use airblade if possible", true)
+    Dalandan_menu.yasuomenu.Combo.airblade:set('tooltip','Q3 -> EQ -> R')
+    Dalandan_menu.yasuomenu.Combo:header("r_header","bayblade = EQ3 -> flash into enemy -> (R)")
+    Dalandan_menu.yasuomenu.Combo:boolean("bayblade","Use bayblade", true)
+    Dalandan_menu.yasuomenu.Combo.bayblade:set('tooltip','bayblade only works when target is manually selected')
 
-    Dalandan_menu.yasuomenu:menu("Harass", "Harass");
-    Dalandan_menu.yasuomenu.Harass:set('icon',graphics.sprite('Sprites/Harass.png'))
-    Dalandan_menu.yasuomenu.Harass:boolean("q_harass","Use Q", true)
-    Dalandan_menu.yasuomenu.Harass:boolean("e_harass","Use E", true)
-    Dalandan_menu.yasuomenu.Harass:boolean("e_gap_harass","Use E as gapcloser with minions", true)
+    -- Dalandan_menu.yasuomenu:menu("Harass", "Harass");
+    -- Dalandan_menu.yasuomenu.Harass:set('icon',graphics.sprite('Sprites/Harass.png'))
+    -- Dalandan_menu.yasuomenu.Harass:boolean("q_harass","Use Q", true)
+    -- Dalandan_menu.yasuomenu.Harass:boolean("e_harass","Use E", true)
+    -- Dalandan_menu.yasuomenu.Harass:boolean("e_gap_harass","Use E as gapcloser with minions", true)
 
     Dalandan_menu.yasuomenu:menu("Misc", "Misc");
     Dalandan_menu.yasuomenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
     -- Dalandan_menu.yasuomenu.Misc:boolean("EEvade", "Use E evade",true);
     Dalandan_menu.yasuomenu.Misc:keybind('flee_key', 'Flee', 'Z', nil);
-    Dalandan_menu.yasuomenu.Misc:boolean("q_laneclear_stack","Use Q to stack in laneclear", true)
-    Dalandan_menu.yasuomenu.Misc:boolean("e_laneclear","Use E in laneclear", true)
-    Dalandan_menu.yasuomenu.Misc:boolean("q_lasthit","Use Q in lasthit", true)
-    Dalandan_menu.yasuomenu.Misc:boolean("e_lasthit","Use E in lasthit", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("flee_q","Stack Q when fleeing", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("flee_q3","Use Q3 on enemy when fleeing", true)
+    Dalandan_menu.yasuomenu.Misc:dropdown('flee_q3_target', '^ Target', 1, {"closest","normal"});
+    Dalandan_menu.yasuomenu.Misc:keybind('farm_key', 'Farm', nil, 'A');
+    Dalandan_menu.yasuomenu.Misc:keybind('dive_key', 'Dive', nil, 'T');
+    Dalandan_menu.yasuomenu.Misc:boolean("Q_after_aa","Use Q after aa", true)
+    Dalandan_menu.yasuomenu.Misc:boolean("e_safety","Check E safety", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("q_laneclear_stack","Use Q to stack in laneclear", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("e_laneclear","Use E in laneclear", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("q_lasthit","Use Q in lasthit", true)
+    -- Dalandan_menu.yasuomenu.Misc:boolean("e_lasthit","Use E in lasthit", true)
 
     Dalandan_menu.yasuomenu:menu("Draw", "Draw");
     Dalandan_menu.yasuomenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))

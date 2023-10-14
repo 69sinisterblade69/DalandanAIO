@@ -9,7 +9,7 @@ shard = {
     -- 'Ryze',
     'TwistedFate/TwistedFate',
     'Xerath/Xerath',
-    'Yasuo/Yasuo2',
+    'Yasuo/Yasuo',
     'Yone/Yone',
 },
 flag = {
