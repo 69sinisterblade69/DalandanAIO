@@ -86,7 +86,7 @@ local function canE(target)
     if menu.yasuomenu.Misc.e_safety:get() and can then
         local pos = vec2(posAfterE(target)):toGame3D()
         if not evade.core.is_action_safe(pos, e.speed, 0) then
-            chat.print(os.clock().." Unsafe")
+            -- chat.print(os.clock().." Unsafe")
             can = false
         end
     end
