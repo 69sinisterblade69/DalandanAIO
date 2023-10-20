@@ -3,6 +3,7 @@ local ts = module.internal("TS");
 local pred = module.internal("pred");
 local damagelib = module.internal("damagelib");
 
+local dalandanPred = module.load("Dalandan_AIO","prediction");
 local common = module.load("Dalandan_AIO", "common");
 local menu = module.load("Dalandan_AIO", "menu");
 -- common.spellNames()
@@ -96,7 +97,7 @@ r.damage = function(m)
     return 50*player:spellSlot(3).level + 130 + 0.45 * common.GetTotalAP(player) + (r.stacks * (20 + player:spellSlot(3).level * 5) + 0.05 * common.GetTotalAP(player) )
 end
 
-local r_cast = 0 
+local last_r_cast = 0 
 
 -- must update in on_tick
 local slow_pred_q = menu.xerathmenu.Combo.slow_pred_q:get()
@@ -233,13 +234,22 @@ local function ts_filter_r(res, object, dist)
     if object and common.IsValidTarget(object) and common.IsEnemyHero(object) then
         if (dist > r.range or object.buff["rocketgrab"]) then return end
         if (menu.xerathmenu.Combo.r_size:get() < game.mousePos:dist(object.pos)) then return end
-        local seg = pred.circular.get_prediction(r, object)
-        if not seg then return false end
-        if seg.startPos:dist(seg.endPos) > r.range then return false end
-        if slow_pred_r then
-            if not trace_filter_r(seg, object) then return false end
+        
+        if menu.xerathmenu.Combo.r_prediction:get() == 1 then
+            -- OLD PRED 
+            local seg = pred.circular.get_prediction(r, object)
+            if not seg then return false end
+            if seg.startPos:dist(seg.endPos) > r.range then return false end
+            if slow_pred_r then
+                if not trace_filter_r(seg, object) then return false end
+            end
+            res.pos = seg.endPos
+        else
+            -- NEW PRED
+            local pos,hitchance = dalandanPred.getPredPos(object,r.delay,r)
+            if not pos then return false end
+            res.pos = vec2(pos.x, pos.z)
         end
-        res.pos = seg.endPos
         res.object = object
         return true
     end 
@@ -472,12 +482,17 @@ local function interrupt(spell)
 end
 
 local function auto_r()
+    local desiredDelay = menu.xerathmenu.Combo.r_delay:get() / 1000
+    if menu.xerathmenu.Combo.r_fast:get() then desiredDelay = 0 end
+
     if menu.xerathmenu.Combo.r_use:get() then
         if r.shots() ~= 0 then
+            orb.core.set_server_pause()
             local resR = ts.get_result(ts_filter_r)
             if resR.pos then
-                if not orb.core.is_spell_locked() then
+                if not orb.core.is_spell_locked() and os.clock() > last_r_cast + desiredDelay then
                     player:castSpell('pos', 3, vec3(resR.pos.x, mousePos.y, resR.pos.y))
+                    last_r_cast = os.clock()
                 end
             end
         end
@@ -604,6 +619,26 @@ local function on_draw()
     else
         graphics.draw_text_2D("AA Disabled",16,graphics.width/2,graphics.height/2+120,0xFFFF4444)
     end
+
+    -- debug shit
+    -- for i=0, objManager.enemies_n-1 do
+    --     local hero = objManager.enemies[i]
+    --     local predPos = pred.core.get_pos_after_time(hero, r.delay):toGame3D()
+    --     graphics.draw_circle(predPos, 20, 2, graphics.argb(255, 0, 255, 0), 10)
+    --     predPos = pred.circular.get_prediction(r, hero).endPos
+    --     if predPos then
+    --         graphics.draw_circle(predPos:toGame3D(), 10, 2, graphics.argb(255, 255, 0, 0), 10)
+    --     end
+    --     graphics.draw_circle(prediction.getPredPos(hero,r.delay,r), 10, 2, graphics.argb(255, 0, 0, 255), 10)
+
+    --     --instant - get_source_pos = serverPos maybe
+    --     -- graphics.draw_circle(hero.pos, 20, 2, graphics.argb(255, 0, 255, 0), 10)
+    --     -- graphics.draw_circle(pred.present.get_source_pos(hero):toGame3D(), 15, 2, graphics.argb(255, 255, 0, 0), 10)
+    --     -- if hero.path.isActive then
+    --     --     graphics.draw_circle(hero.path.serverPos, 20, 2, graphics.argb(255, 0, 0, 255), 10)
+    --     -- end
+        
+    -- end
 end
 
 cb.add(cb.tick,on_tick)

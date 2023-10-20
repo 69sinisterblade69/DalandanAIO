@@ -289,7 +289,10 @@ if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu.Combo:header('r_combo_header','R settings')
     Dalandan_menu.xerathmenu.Combo:boolean('r_use', 'Use R (auto missiles)', true);
     Dalandan_menu.xerathmenu.Combo:slider('r_size', 'Size of auto missile', 500, 300, 800, 50);
-    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slower prediction on R', true);
+    Dalandan_menu.xerathmenu.Combo:slider('r_delay', 'Delay [ms]', 300, 0, 2000, 50);
+    Dalandan_menu.xerathmenu.Combo:keybind('r_fast', 'Fast R (0 delay)', 'Space', nil);
+    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slow pred on R (only old prediction)', true);
+    Dalandan_menu.xerathmenu.Combo:dropdown('r_prediction', 'Prediction', 2, {"old","experimental"});
 
     -- Lane
     Dalandan_menu.xerathmenu:menu("Lane", "Lane");
