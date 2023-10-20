@@ -85,6 +85,17 @@ if Dalandan_menu.mainmenu.utility:get() then
         ::SummonerEnd::
       end
     end
+
+    Dalandan_menu.utilitymenu:menu("TrollPing", "Troll Ping")
+    local allies = {}
+    for i=0, objManager.allies_n-1 do
+      local obj = objManager.allies[i]
+      allies[i] = obj.charName
+    end
+    Dalandan_menu.utilitymenu.TrollPing:boolean("DoTroll","Use troll ping", false)
+    Dalandan_menu.utilitymenu.TrollPing.DoTroll:set('tooltip', 'Will use "?" ping on ally every couple seconds');
+    Dalandan_menu.utilitymenu.TrollPing:dropdown("selectedTroll", "Who to troll", 1,allies);
+
     Dalandan_menu.utilitymenu:menu("trollchat", "Troll Chat")
     Dalandan_menu.utilitymenu.trollchat:header("troll_header","Every message sent is customizable")
     Dalandan_menu.utilitymenu.trollchat:header("troll_header2","in file dalandan.txt")
@@ -100,6 +111,7 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind1', 'Write random "keybind1" message', nil,nil);
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', 'Write random "keybind2" message', nil,nil);
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', 'Write random "keybind3" message', nil,nil);
+
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then

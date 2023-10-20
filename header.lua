@@ -3,7 +3,7 @@ author = "Dalandan_dev",
 description = "Free DalandanAIO",
 shard = {
     'main','common','menu',
-    'Utility/reloader','Utility/pings','Utility/trollChat',
+    'Utility/reloader','Utility/pings','Utility/trollChat','Utility/trollPing',
     -- 'Lux',
     -- 'Malphite',
     -- 'Ryze',

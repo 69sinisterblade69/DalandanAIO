@@ -1,4 +1,4 @@
-chat.print('[Dalandan AIO] RELEASE 20.10.2023 Loading...')
+chat.print('[Dalandan AIO] RELEASE 20.10.2023-2 Loading...')
 chat.print('[Dalandan AIO] https://discord.gg/9cxRCHYR4y')
 chat.print('[Dalandan AIO] https://github.com/69sinisterblade69/DalandanAIO')
 
@@ -8,7 +8,8 @@ if menu.mainmenu.reload:get() then
 end
 if menu.mainmenu.utility:get() then
     module.load("Dalandan_AIO", "Utility/pings");
-    module.load("Dalandan_AIO", "Utility/trollChat"); --etc..
+    module.load("Dalandan_AIO", "Utility/trollChat");
+    module.load("Dalandan_AIO", "Utility/trollPing");
 end
 
 
