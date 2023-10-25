@@ -244,11 +244,23 @@ local function ts_filter_r(res, object, dist)
                 if not trace_filter_r(seg, object) then return false end
             end
             res.pos = seg.endPos
-        else
+        elseif menu.xerathmenu.Combo.r_prediction:get() == 2 then
             -- NEW PRED
             local pos,hitchance = dalandanPred.getPredPos(object,r.delay,r)
             if not pos then return false end
             res.pos = vec2(pos.x, pos.z)
+        elseif menu.xerathmenu.Combo.r_prediction:get() == 3 then
+            -- NEWEST PRED
+            local seg = pred.circular.get_prediction(r, object)
+            if not seg then return false end
+            if seg.startPos:dist(seg.endPos) > r.range then return false end
+            if slow_pred_r then
+                if not trace_filter_r(seg, object) then return false end
+            end
+
+            local pos,hitchance = dalandanPred.getPredPos(object,r.delay,r)
+            if not pos then return false end
+            res.pos = seg.endPos:lerp(vec2(pos.x, pos.z), menu.xerathmenu.Combo.r_pred_factor:get()/100)
         end
         res.object = object
         return true

@@ -86,16 +86,17 @@ if Dalandan_menu.mainmenu.utility:get() then
       end
     end
 
-    Dalandan_menu.utilitymenu:menu("TrollPing", "Troll Ping")
     local allies = {}
     for i=0, objManager.allies_n-1 do
       local obj = objManager.allies[i]
       allies[i] = obj.charName
     end
-    Dalandan_menu.utilitymenu.TrollPing:boolean("DoTroll","Use troll ping", false)
-    Dalandan_menu.utilitymenu.TrollPing.DoTroll:set('tooltip', 'Will use "?" ping on ally every couple seconds');
-    Dalandan_menu.utilitymenu.TrollPing:dropdown("selectedTroll", "Who to troll", 1,allies);
-
+    if objManager.allies_n > 1 then
+      Dalandan_menu.utilitymenu:menu("TrollPing", "Troll Ping")
+      Dalandan_menu.utilitymenu.TrollPing:boolean("DoTroll","Use troll ping", false)
+      Dalandan_menu.utilitymenu.TrollPing.DoTroll:set('tooltip', 'Will use "?" ping on ally every couple seconds');
+      Dalandan_menu.utilitymenu.TrollPing:dropdown("selectedTroll", "Who to troll", 1,allies);
+    end
     Dalandan_menu.utilitymenu:menu("trollchat", "Troll Chat")
     Dalandan_menu.utilitymenu.trollchat:header("troll_header","Every message sent is customizable")
     Dalandan_menu.utilitymenu.trollchat:header("troll_header2","in file dalandan.txt")
@@ -112,6 +113,11 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', 'Write random "keybind2" message', nil,nil);
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', 'Write random "keybind3" message', nil,nil);
 
+    Dalandan_menu.utilitymenu:menu("trollemote", "Troll Emote")
+    Dalandan_menu.utilitymenu.trollemote:keybind('emote_spam', 'Spam selected emote', nil,'H');
+    Dalandan_menu.utilitymenu.trollemote:dropdown('emote',"Select emote",1,{"dance","taunt","laugh","joke"})
+    Dalandan_menu.utilitymenu.trollemote:slider('delay', 'Delay (ms)', 250, 100, 500, 10);
+    Dalandan_menu.utilitymenu.trollemote.delay:set('callback',menuReload)
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
@@ -303,9 +309,11 @@ if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu.Combo:slider('r_size', 'Size of auto missile', 500, 300, 800, 50);
     Dalandan_menu.xerathmenu.Combo:slider('r_delay', 'Delay [ms]', 300, 0, 2000, 50);
     Dalandan_menu.xerathmenu.Combo:keybind('r_fast', 'Fast R (0 delay)', 'Space', nil);
-    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slow pred on R (only old prediction)', true);
-    Dalandan_menu.xerathmenu.Combo:dropdown('r_prediction', 'Prediction', 2, {"old","experimental"});
-
+    Dalandan_menu.xerathmenu.Combo:boolean('slow_pred_r', 'Use slow pred on R', true);
+    Dalandan_menu.xerathmenu.Combo.slow_pred_r:set('tooltip',"only old and mixed prediction");
+    Dalandan_menu.xerathmenu.Combo:dropdown('r_prediction', 'Prediction', 3, {"old","experimental","mixed"});
+    Dalandan_menu.xerathmenu.Combo:slider('r_pred_factor', 'Pred factor, only mixed pred', 30, 0, 100, 1);
+    Dalandan_menu.xerathmenu.Combo.r_pred_factor:set('tooltip',"0 = old, 100 = experimental, default = 30, lower this value if you overshoot, increase it if you undershoot");
     -- Lane
     Dalandan_menu.xerathmenu:menu("Lane", "Lane");
     Dalandan_menu.xerathmenu.Lane:set('icon',graphics.sprite('Sprites/icon minions light.png'))
@@ -497,4 +505,23 @@ if player.charName == "Yone" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.yonemenu.Draw:boolean('r_draw', 'Draw R', true);
     Dalandan_menu.yonemenu.Draw:boolean('dmg_draw', 'Show damage on hp bar', true);
 end
+-- if player.charName == "Ezreal" and Dalandan_menu.mainmenu.champion:get() then
+--     Dalandan_menu.ezrealmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+--     -- Dalandan_menu.ezrealmenu:set('icon',graphics.sprite('Yone/Yone.png'))
+
+--     Dalandan_menu.ezrealmenu:menu("q", "Q settings");
+--     Dalandan_menu.ezrealmenu.q:boolean("q_always","Use Q when high stacks", true)
+--     Dalandan_menu.ezrealmenu.q:boolean("q_combo","Use Q in combo", true)
+--     Dalandan_menu.ezrealmenu.q:boolean("q_laneclear","Use Q in laneclear on enemy", true)
+--     Dalandan_menu.ezrealmenu.q:boolean("q_minion","Use Q in laneclear on minions", true)
+
+--     Dalandan_menu.ezrealmenu:menu("w", "W settings");
+--     Dalandan_menu.ezrealmenu.w:boolean("w_combo","Use W in combo", true)
+
+--     Dalandan_menu.ezrealmenu:menu("r", "R settings");
+--     Dalandan_menu.ezrealmenu.r:boolean("r_ks","Use R killsteal", true)
+--     Dalandan_menu.ezrealmenu.r:slider("r_min","R min range",common.GetAARange()+100,0,2000,50)
+--     Dalandan_menu.ezrealmenu.r:slider("r_max","R max range",15,1,100,1)
+     
+-- end
 return Dalandan_menu

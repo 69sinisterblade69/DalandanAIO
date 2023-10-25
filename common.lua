@@ -332,7 +332,8 @@ common.champs = {
       Xerath = true;
       Yasuo = true;
       -- Zed = true;
-      Yone = true
+      Yone = true;
+    --   Ezreal = true;
 }
 
 return common

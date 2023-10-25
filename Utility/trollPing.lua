@@ -9,10 +9,10 @@ end
 
 local function troll()
     for i,obj in pairs(allies) do
-        if obj.charName == allies[menu.utilitymenu.TrollPing.selectedTroll:get()].charName and menu.utilitymenu.TrollPing.DoTroll:get() and obj.isAlive then
+        if objManager.allies_n > 1 and obj.charName == allies[menu.utilitymenu.TrollPing.selectedTroll:get()].charName and menu.utilitymenu.TrollPing.DoTroll:get() and obj.isAlive then
             ping.send(obj.pos, ping.MISSING_ENEMY)
         end
     end
 end
 
-common.SetInterval(troll, 5,100)
+common.SetInterval(troll, 5,9999999)
