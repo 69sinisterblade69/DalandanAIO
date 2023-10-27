@@ -85,7 +85,7 @@ local function canE(target)
 
     if menu.yasuomenu.Misc.e_safety:get() and can then
         local pos = vec2(posAfterE(target)):toGame3D()
-        if not evade.core.is_action_safe(pos, e.speed, 0) then
+        if evade and not evade.core.is_action_safe(pos, e.speed, 0) then
             -- chat.print(os.clock().." Unsafe")
             can = false
         end
@@ -536,8 +536,18 @@ end
 
 local function laneClear()
     local target = getTarget(1400)
-    local enemyMinions = objManager.minions[TEAM_ENEMY]
+    local enemyMinions = objManager.minions['farm']
     local enemyMinionsSize = enemyMinions.size
+    local minions = {}
+    for i=0, enemyMinionsSize-1 do
+        table.insert(minions, enemyMinions[i])
+    end
+
+    enemyMinions = objManager.minions[TEAM_NEUTRAL]
+    enemyMinionsSize = enemyMinions.size
+    for i=0, enemyMinionsSize-1 do
+        table.insert(minions, enemyMinions[i])
+    end
 
     local qTime = 0
     if player.buff['yasuoq2'] then
@@ -548,12 +558,7 @@ local function laneClear()
         turrets[i] = objManager.turrets[TEAM_ENEMY][i]
     end
 
-    for i=0, enemyMinionsSize-1 do
-        local minion = enemyMinions[i]
-        if common.IsValidTarget(minion) and minion.pos:dist(player.pos) < q2.range then
 
-        end
-    end
 
     local max_hits_eq = 0
     local max_minion_eq = nil
@@ -564,8 +569,9 @@ local function laneClear()
 
     local minion_hits_q = 0
     local minion_hits_q2 = 0
-    for i=0, enemyMinionsSize-1 do
-        local minion = enemyMinions[i]
+    -- for i=0, enemyMinionsSize-1 do
+    for i, minion in pairs(minions) do
+        -- local minion = enemyMinions[i]
         if common.IsValidTarget(minion) then
             -- if vec2(posAfterE(minion)):to3D(mousePos.y).countEnemyLaneMinions(eq.radius+minion.boundingRadius) > max_hits_eq and not orb.core.is_spell_locked() then
             --     max_hits_eq = vec2(posAfterE(minion)):to3D(mousePos.y).countEnemyLaneMinions(eq.radius+minion.boundingRadius)
@@ -574,9 +580,8 @@ local function laneClear()
                 max_minion_eq = minion
             end
             if minion.pos:dist(player.pos) < q.range then
-                for j=0, enemyMinionsSize-1 do
-                    local minion2 = enemyMinions[j]
-                    if common.IsValidTarget(minion) then
+                for j, minion2 in pairs(minions) do
+                    if common.IsValidTarget(minion2) then
                         local p = mathf.closest_vec_line(minion2.pos2D, player.pos2D, minion.pos2D)
                         local res = minion2.pos2D:dist(p)
                         if res <= q.width + minion2.boundingRadius then
@@ -588,10 +593,10 @@ local function laneClear()
                     max_hits_q = minion_hits_q
                     max_minion_q = minion
                 end
-            elseif minion.pos:dist(player.pos) < q2.range then
-                for j=0, enemyMinionsSize-1 do
-                    local minion2 = enemyMinions[j]
-                    if common.IsValidTarget(minion) then
+            end
+            if minion.pos:dist(player.pos) < q2.range then
+                for k, minion2 in pairs(minions) do
+                    if common.IsValidTarget(minion2) then
                         local p = mathf.closest_vec_line(minion2.pos2D, player.pos2D, minion.pos2D)
                         local res = minion2.pos2D:dist(p)
                         if res <= q.width + minion2.boundingRadius then
@@ -599,7 +604,7 @@ local function laneClear()
                         end
                     end
                 end
-                if minion_hits_q2 > max_hits_q then
+                if minion_hits_q2 > max_hits_q2 then
                     max_hits_q2 = minion_hits_q2
                     max_minion_q2 = minion
                 end
@@ -646,8 +651,9 @@ local function laneClear()
 
         -- E lasthit
         if player:spellSlot(2).state == 0 then
-            for i=0, enemyMinionsSize-1 do
-                local minion = enemyMinions[i]
+            for i, minion in pairs(minions) do
+            -- for i=0, enemyMinionsSize-1 do
+            --     local minion = enemyMinions[i]
                 if common.IsValidTarget(minion) and minion.pos:dist(player.pos) < e.range and canE(minion) then
                     if minion.health < Edmg(minion) then
                         -- chat.print(damagelib.get_spell_damage('YasuoE', 2, player, minion, false, 0))
@@ -766,28 +772,13 @@ local function on_draw()
     if ((ready and player:spellSlot(3).state == 0) or not ready) and drawr then
         graphics.draw_circle(player.pos, r.range, 2, graphics.argb(255, 0, 255, 0), 100)
     end
-    -- local dir = player.direction
-    -- dir = dir * 200
-    -- dir = player.pos + dir
-    -- graphics.draw_line(player.pos, dir, 2, 0xFFFFFFFF)
 
-    -- local target = getTarget("combo",1400)
-    -- if target and target ~= nil then
-    --     local dir = target.direction
-    --     dir = dir * 50
-    --     dir = target.pos + dir
-    --     graphics.draw_line(target.pos, dir, 2, 0xFFFFFFFF)
+    -- local spellFarmMinions = objManager.minions[TEAM_NEUTRAL]
+    -- for i=0, spellFarmMinions.size-1 do
+    --     local obj = spellFarmMinions[i]
+    --     -- print(obj.charName)
+    --     graphics.draw_circle(obj.pos, 20, 2, graphics.argb(255, 0, 255, 0), 8)
     -- end
-        -- local hpBar = player.barPos
-        -- local buff_keys = player.buff.keys
-        -- for i = 1, buff_keys.n do
-        --     local buff_key = buff_keys[i]
-        --     local buff = player.buff[buff_key]
-        --     if buff and buff.valid then 
-        --         local string = "Name: "..buff.name.." Type: "..buff.type.." Stacks: "..buff.stacks.." Stacks2: "..buff.stacks2
-        --         graphics.draw_text_2D(string, 18, hpBar.x + 160, hpBar.y + 70 + 15*i, 0xFFFFFFFF)
-        --     end
-        -- end
 end
 
 cb.add(cb.draw,on_draw)
