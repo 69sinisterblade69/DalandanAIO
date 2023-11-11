@@ -2,6 +2,7 @@
 [Hanbot](https://t.me/hanbot_never_die) shard, script for league of legends
 
 Supported champions:
+- Caitlyn
 - Twisted fate
 - Xerath
 - Yasuo
@@ -15,7 +16,8 @@ Utilities:
 - Troll chat (fully customizable, change texts in dalandan.txt)
 - Troll ping (ping "?" every couple seconds on your ally)
 - Emote spammer
+- AA damage indicator
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/28.10.2023/DalandanAIO.shard
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/11.11.2023/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
