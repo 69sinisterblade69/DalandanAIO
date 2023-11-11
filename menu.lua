@@ -30,8 +30,9 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu = menu("Dalandan_Menu_Utility", "Dalandan AIO - Utility");
     
     Dalandan_menu.utilitymenu:menu("pings", "Auto pings")
-    Dalandan_menu.utilitymenu.pings:boolean('ping_ward', 'Ping "enemy has vision" on wards', false);
+    Dalandan_menu.utilitymenu.pings:boolean('ping_ward', 'Ping on enemy wards', false);
     Dalandan_menu.utilitymenu.pings:boolean('ping_ward_visible', '^ Ping only if ward is on your screen', false);
+    Dalandan_menu.utilitymenu.pings:dropdown('ping_ward_type',"Ping type",1,{"Enemy has vision","alert/generic (the blue dot)"})
     Dalandan_menu.utilitymenu.pings:boolean('chat_ult','Write ults in chat', false)
     -- Dalandan_menu.utilitymenu.pings:boolean('ping_ult','Ping ults in chat', false)
     Dalandan_menu.utilitymenu.pings:menu("ults","Ults")
@@ -547,6 +548,8 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.q:slider('q_count', '^ Only when x minion hit', 3, 1, 6, 1);
     Dalandan_menu.caitlynmenu.q:boolean("q_jungle","Use Q in jungle clear", true)
     Dalandan_menu.caitlynmenu.q:boolean("q_lasthit","Use Q to lasthit cannon", true)
+    Dalandan_menu.caitlynmenu.q:boolean("q_harass","Use Q in Harass", true)
+    Dalandan_menu.caitlynmenu.q:slider('q_count_harass', '^ Only when enemy and x minion hit', 3, 1, 6, 1);
 
     Dalandan_menu.caitlynmenu:menu("w", "W settings");
     Dalandan_menu.caitlynmenu.w:set('icon',player:spellSlot(1).icon)
@@ -562,6 +565,7 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.e:boolean("e_antigapcloser","Use E for Anti-Gapclose", true)
     Dalandan_menu.caitlynmenu.e:boolean("e_chase","Use E to chase low hp target", true)
     Dalandan_menu.caitlynmenu.e:slider('chase_hp', 'How low hp to chase [%]', 25, 0, 100, 5);
+    Dalandan_menu.caitlynmenu.e:boolean("e_safety_melee","Safety check for dashing into melee champion", true)
 
     Dalandan_menu.caitlynmenu:menu("r", "R settings");
     Dalandan_menu.caitlynmenu.r:set('icon',player:spellSlot(3).icon)

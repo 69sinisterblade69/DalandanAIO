@@ -2,13 +2,18 @@ local common = module.load("Dalandan_AIO", "common");
 local menu = module.load("Dalandan_AIO", "menu");
 
 local function on_create_minion(obj)
+    local pingType = nil
     if menu.utilitymenu.pings.ping_ward:get() then
+        if menu.utilitymenu.pings.ping_ward_type:get() == 1 then
+            pingType = ping.AREA_IS_WARDED
+        elseif menu.utilitymenu.pings.ping_ward_type:get() == 2 then
+            pingType = ping.ALERT
+        end
+
         if obj.isWard and obj.team == TEAM_ENEMY and menu.utilitymenu.pings.ping_ward_visible:get() and obj.isOnScreen then
-            -- chat.print("1")
-            ping.send(obj.pos, ping.AREA_IS_WARDED, obj)
+            ping.send(obj.pos, pingType, obj)
         elseif obj.isWard and obj.team == TEAM_ENEMY and not menu.utilitymenu.pings.ping_ward_visible:get() then
-            -- chat.print("2")
-            ping.send(obj.pos, ping.AREA_IS_WARDED, obj)
+            ping.send(obj.pos, pingType, obj)
         end
     end
 

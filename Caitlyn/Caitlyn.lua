@@ -27,6 +27,8 @@ local q = {
     },
 }
 
+q.range = q.range * 0.95
+
 local w = {
     range = 800,
     radius = 15,
@@ -122,9 +124,23 @@ local function dashCheck(pos)
     end
 
     -- enemy check
-    local count, heroes = common.CountEnemiesNearPos(pos, 450)
+    local count, heroes = common.CountEnemiesNearPos(pos, 650)
     if count >= 3 then
         safe = false
+    end
+
+    if menu.caitlynmenu.e.e_safety_melee:get() then
+        local count = 0
+        if heroes then
+            for i,hero in pairs(heroes) do
+                if hero.pos:dist(pos) < 450 and hero.isMelee then
+                    count = count + 1
+                end
+            end
+            if count >= 1 then
+                safe = false
+            end 
+        end
     end
 
     -- wall check
@@ -342,7 +358,7 @@ local function combo()
     end
 end
 
-local function minionsHit(obj,pos,pred)
+local function minionsHit(pos,pred)
     -- assume no collision with minions
     local minions = objManager.minions["farm"]
     local minionSize = minions.size
@@ -367,7 +383,6 @@ local function minionsHit(obj,pos,pred)
             end
         end
     end
-
     return count
 end
 
@@ -376,7 +391,7 @@ local function laneClear()
         local seg, obj = orb.farm.skill_farm_linear(q)
         local count = menu.caitlynmenu.q.q_count:get()
         if seg then
-            if minionsHit(obj,seg.endPos,q) >= count then
+            if minionsHit(seg.endPos,q) >= count then
                 castQ(seg.endPos, false)
             end
         elseif not orb.farm.lane_clear_wait() then
@@ -387,7 +402,7 @@ local function laneClear()
             for i=0,minionSize do
                 local minion = minions[i]
                 if common.IsValidTarget(minion) then
-                    local hits = minionsHit(minion,minion.pos2D,q)
+                    local hits = minionsHit(minion.pos2D,q)
                     if hits > maxHits then
                         maxMinion = minion
                         maxHits = hits
@@ -496,6 +511,19 @@ local function semiR()
     end
 end
 
+local function harass()
+    if menu.caitlynmenu.Misc.farm_key:get() and menu.caitlynmenu.q.q_harass:get() then
+        local target = getTarget(q.range)
+        local seg = pred.linear.get_prediction(q, target, player)
+        local count = menu.caitlynmenu.q.q_count_harass:get()
+        if seg and seg.endPos:dist(player.pos) <= q.range then
+            if minionsHit(seg.endPos,q) >= count then
+                castQ(seg.endPos, false)
+            end
+        end
+    end
+end
+
 local function on_tick()
     flee()
     antiGapClose()
@@ -508,6 +536,9 @@ local function on_tick()
     if orb.menu.lane_clear.key:get() then
         laneClear()
         jungleClear()
+    end
+    if orb.menu.hybrid.key:get() then
+        harass()
     end
     if orb.menu.last_hit.key:get() then
         lastHit()
