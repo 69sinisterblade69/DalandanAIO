@@ -109,15 +109,21 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu.trollchat:boolean('troll_triple', 'Write random "triplekill" message', false);
     Dalandan_menu.utilitymenu.trollchat:boolean('troll_quadra', 'Write random "quadrakill" message', false);
     Dalandan_menu.utilitymenu.trollchat:boolean('troll_penta', 'Write random "pentakill" message', false);
-    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind1', 'Write random "keybind1" message', nil,nil);
-    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', 'Write random "keybind2" message', nil,nil);
-    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', 'Write random "keybind3" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind1', '"keybind1" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', '"keybind2" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', '"keybind3" message', nil,nil);
 
     Dalandan_menu.utilitymenu:menu("trollemote", "Troll Emote")
     Dalandan_menu.utilitymenu.trollemote:keybind('emote_spam', 'Spam selected emote', nil,'H');
     Dalandan_menu.utilitymenu.trollemote:dropdown('emote',"Select emote",1,{"dance","taunt","laugh","joke"})
     Dalandan_menu.utilitymenu.trollemote:slider('delay', 'Delay (ms)', 250, 100, 500, 10);
     Dalandan_menu.utilitymenu.trollemote.delay:set('callback',menuReload)
+
+    Dalandan_menu.utilitymenu:menu("aa", "AA indicator")
+    -- Dalandan_menu.utilitymenu.aa:boolean("show", "Show how many aa to kill", true)
+    Dalandan_menu.utilitymenu.aa:boolean('show', 'Show how many aa to kill', false);
+    Dalandan_menu.utilitymenu.aa:slider('size', 'Size', 22, 14, 30, 1);
+    Dalandan_menu.utilitymenu.aa:color('MyColor',"Color",255,255,255,255)
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
@@ -524,4 +530,57 @@ end
 --     Dalandan_menu.ezrealmenu.r:slider("r_max","R max range",15,1,100,1)
      
 -- end
+if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
+    Dalandan_menu.caitlynmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+    Dalandan_menu.caitlynmenu:set('icon',graphics.sprite('Caitlyn/Caitlyn.png'))
+
+    Dalandan_menu.caitlynmenu:menu("q", "Q settings");
+    Dalandan_menu.caitlynmenu.q:set('icon',player:spellSlot(0).icon)
+    Dalandan_menu.caitlynmenu.q:boolean("aarange","Don't use Q in AA range on enemy", true)
+    Dalandan_menu.caitlynmenu.q.aarange:set("tooltip","works only in combo")
+    Dalandan_menu.caitlynmenu.q:boolean("q_dps","Don't use Q if dps < aa dps", true)
+    -- Dalandan_menu.caitlynmenu.q:slider("q_dps_critChance","^ Use crit damage when critchance above", 100,0,100,1)
+    Dalandan_menu.caitlynmenu.q.q_dps:set("tooltip","and target is in aa range, works only in combo")
+    Dalandan_menu.caitlynmenu.q:boolean("q_combo","Use Q in combo", true)
+    Dalandan_menu.caitlynmenu.q:boolean("q_eq","Use Q when casting E", true)
+    Dalandan_menu.caitlynmenu.q:boolean("q_farm","Use Q in laneclear", true)
+    Dalandan_menu.caitlynmenu.q:slider('q_count', '^ Only when x minion hit', 3, 1, 6, 1);
+    Dalandan_menu.caitlynmenu.q:boolean("q_jungle","Use Q in jungle clear", true)
+    Dalandan_menu.caitlynmenu.q:boolean("q_lasthit","Use Q to lasthit cannon", true)
+
+    Dalandan_menu.caitlynmenu:menu("w", "W settings");
+    Dalandan_menu.caitlynmenu.w:set('icon',player:spellSlot(1).icon)
+    -- Dalandan_menu.caitlynmenu.w:boolean("w_combo","Use W in combo", true)
+    Dalandan_menu.caitlynmenu.w:boolean("w_antigapcloser","Use W for Anti-Gapclose", true)
+    Dalandan_menu.caitlynmenu.w:boolean("w_auto","Auto W in certain situations", true)
+    Dalandan_menu.caitlynmenu.w.w_auto:set("tooltip","like if in melee range, slowed, cc'd, ")
+    Dalandan_menu.caitlynmenu.w:boolean("w_ew","Auto W when casting E", true)
+
+    Dalandan_menu.caitlynmenu:menu("e", "E settings");
+    Dalandan_menu.caitlynmenu.e:set('icon',player:spellSlot(2).icon)
+    Dalandan_menu.caitlynmenu.e:boolean("e_combo","Use E in combo", true)
+    Dalandan_menu.caitlynmenu.e:boolean("e_antigapcloser","Use E for Anti-Gapclose", true)
+    Dalandan_menu.caitlynmenu.e:boolean("e_chase","Use E to chase low hp target", true)
+    Dalandan_menu.caitlynmenu.e:slider('chase_hp', 'How low hp to chase [%]', 25, 0, 100, 5);
+
+    Dalandan_menu.caitlynmenu:menu("r", "R settings");
+    Dalandan_menu.caitlynmenu.r:set('icon',player:spellSlot(3).icon)
+    Dalandan_menu.caitlynmenu.r:keybind('r_key', 'Semi R', 'R', nil);
+    Dalandan_menu.caitlynmenu.r:dropdown('r_mode',"Semi R mode",1,{"Closest to mouse","Lowest HP"})
+
+    Dalandan_menu.caitlynmenu:menu("Misc", "Misc");
+    Dalandan_menu.caitlynmenu.Misc:set('icon',graphics.sprite('Sprites/Misc.png'))
+    Dalandan_menu.caitlynmenu.Misc:keybind('farm_key', 'Farm toggle', nil, 'A');
+    Dalandan_menu.caitlynmenu.Misc:keybind('flee_key', 'Use E to dash to mouse pos', 'Z', nil);
+    Dalandan_menu.caitlynmenu.Misc:boolean("eq_ks","Use E + [Q] + AA ks", true)
+
+    Dalandan_menu.caitlynmenu:menu("Draw", "Draw");
+    Dalandan_menu.caitlynmenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
+    Dalandan_menu.caitlynmenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('q_draw', 'Draw Q', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('w_draw', 'Draw W', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('e_draw', 'Draw E', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('r_draw', 'Draw R', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('r_dmg', 'Draw R Damage', true);
+end
 return Dalandan_menu

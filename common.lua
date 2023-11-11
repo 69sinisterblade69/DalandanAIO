@@ -334,6 +334,7 @@ common.champs = {
       -- Zed = true;
       Yone = true;
     --   Ezreal = true;
+    Caitlyn = true;
 }
 
 return common

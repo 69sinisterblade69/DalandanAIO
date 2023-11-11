@@ -3,7 +3,7 @@ author = "Dalandan_dev",
 description = "Free DalandanAIO",
 shard = {
     'main','common','menu','prediction',
-    'Utility/reloader','Utility/pings','Utility/trollChat','Utility/trollPing','Utility/trollEmote',
+    'Utility/reloader','Utility/pings','Utility/trollChat','Utility/trollPing','Utility/trollEmote','Utility/aa',
     -- 'Lux',
     -- 'Malphite',
     -- 'Ryze',
@@ -11,6 +11,7 @@ shard = {
     'Xerath/Xerath',
     'Yasuo/Yasuo',
     'Yone/Yone',
+    'Caitlyn/Caitlyn',
 },
 flag = {
   text = "Dalandan AIO",
@@ -33,6 +34,7 @@ resources = {
   'Yasuo/Yasuo.png',
   'Xerath/Xerath.png',
   'Yone/Yone.png',
+  'Caitlyn/Caitlyn.png',
 },
   load = function()
     return true; 
