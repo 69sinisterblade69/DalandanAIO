@@ -18,6 +18,6 @@ Utilities:
 - Emote spammer
 - AA damage indicator
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/11.11.2023/DalandanAIO.shard
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/11.11.2023-2/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
