@@ -2,6 +2,11 @@ local ts = module.internal("TS");
 local pred = module.internal("pred");
 local orb = module.internal("orb");
 
+local MyMenu = {}
+MyMenu.mainmenu = menu("Dalandan_Common", "Dalandan AIO - Common");
+MyMenu.mainmenu:dropdown('highRes', 'High res mode', 1,{"1080p","1440p","4k"});
+MyMenu.mainmenu.highRes:set('tooltip',"It's used for things like damage indicator, resolution names are just guidelines, pick one that closest matches damage indicator on your screen")
+
 common = {}
 
 local delayedActions, delayedActionsExecuter = {}, nil
@@ -302,18 +307,74 @@ function common.damageIndicatorUpdated(damage,target,range_max,range_min,tooltip
             damagePercentage =  (target.health - damage) / target.maxHealth
         end
         local currentHealthPercentage = target.health / target.maxHealth
+        
+        local highRes = MyMenu.mainmenu.highRes:get()
+        local percentage = 104
+        local pointX = 164
+        local pointY = 123
+        local textX = 160
+        local textY = 90
+        local tooltipY = 70
+        local textSize = 18
+        local lineSize = 12
+        if highRes == 1 then
 
-        local startPoint = vec2(hpBar.x + 163 + currentHealthPercentage * 104 , hpBar.y + 123);
-        local endPoint = vec2(hpBar.x + 163 + damagePercentage * 104, hpBar.y + 123);
-        if damage > target.health then
-            graphics.draw_text_2D("KILLABLE: YES", 18, hpBar.x + 160, hpBar.y + 90, 0xFFFF0000)
-            graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
-            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA07DFE33)
-        else
-            graphics.draw_text_2D("KILLABLE: NO", 18, hpBar.x + 160, hpBar.y + 90, 0xFFEDCE34)
-            graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
-            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA0EDCE34)
+        elseif highRes == 2 then
+            percentage = 125
+            pointX = 196
+            pointY = 148
+            textX = 190
+            textY = 105
+            tooltipY = 82
+            textSize = 22
+            lineSize = 12 -- test
+        elseif highRes == 3 then
+            percentage = 200
+            pointX = 318
+            pointY = 238
+            textX = 310
+            textY = 170
+            tooltipY = 140
+            textSize = 32
+            lineSize = 21
         end
+
+        local startPoint = vec2(hpBar.x + pointX + currentHealthPercentage * percentage , hpBar.y + pointY);
+        local endPoint = vec2(hpBar.x + pointX + damagePercentage * percentage, hpBar.y + pointY);
+        if damage > target.health then
+            graphics.draw_text_2D("KILLABLE: YES", textSize, hpBar.x + textX, hpBar.y + textY, 0xFFFF0000)
+            graphics.draw_text_2D(tooltip, textSize, hpBar.x + textX, hpBar.y + tooltipY, 0xFFFFFFFF)
+            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, lineSize, 0xA07DFE33)
+        else
+            graphics.draw_text_2D("KILLABLE: NO", textSize, hpBar.x + textX, hpBar.y + textY, 0xFFEDCE34)
+            graphics.draw_text_2D(tooltip, textSize, hpBar.x + textX, hpBar.y + tooltipY, 0xFFFFFFFF)
+            graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, lineSize, 0xA0EDCE34)
+        end
+        -- if not highRes then
+        --     local startPoint = vec2(hpBar.x + 163 + currentHealthPercentage * 104 , hpBar.y + 123);
+        --     local endPoint = vec2(hpBar.x + 163 + damagePercentage * 104, hpBar.y + 123);
+        --     if damage > target.health then
+        --         graphics.draw_text_2D("KILLABLE: YES", 18, hpBar.x + 160, hpBar.y + 90, 0xFFFF0000)
+        --         graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
+        --         graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA07DFE33)
+        --     else
+        --         graphics.draw_text_2D("KILLABLE: NO", 18, hpBar.x + 160, hpBar.y + 90, 0xFFEDCE34)
+        --         graphics.draw_text_2D(tooltip, 18, hpBar.x + 160, hpBar.y + 70, 0xFFFFFFFF)
+        --         graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA0EDCE34)
+        --     end
+        -- else
+        --     local startPoint = vec2(hpBar.x + 196 + currentHealthPercentage * 125 , hpBar.y + 148);
+        --     local endPoint = vec2(hpBar.x + 196 + damagePercentage * 125, hpBar.y + 148);
+        --     if damage > target.health then
+        --         graphics.draw_text_2D("KILLABLE: YES", 22, hpBar.x + 190, hpBar.y + 105, 0xFFFF0000)
+        --         graphics.draw_text_2D(tooltip, 22, hpBar.x + 190, hpBar.y + 82, 0xFFFFFFFF)
+        --         graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA07DFE33)
+        --     else
+        --         graphics.draw_text_2D("KILLABLE: NO", 22, hpBar.x + 190, hpBar.y + 105, 0xFFEDCE34)
+        --         graphics.draw_text_2D(tooltip, 22, hpBar.x + 190, hpBar.y + 82, 0xFFFFFFFF)
+        --         graphics.draw_line_2D(startPoint.x, startPoint.y, endPoint.x, endPoint.y, 12, 0xA0EDCE34)
+        --     end
+        -- end
     end
 end
 
