@@ -7,6 +7,10 @@ Supported champions:
 - Xerath
 - Yasuo
 - Yone
+  
+Awareness:
+- AA damage indicator
+- Cooldown tracker
 
 Utilities: 
 - Arena auto reload 
@@ -16,8 +20,8 @@ Utilities:
 - Troll chat (fully customizable, change texts in dalandan.txt)
 - Troll ping (ping "?" every couple seconds on your ally)
 - Emote spammer
-- AA damage indicator
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/12.11.2023/DalandanAIO.shard
+
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/01.12.2023/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
