@@ -1,4 +1,4 @@
-chat.print('[Dalandan AIO] RELEASE 12.11.2023 Loading...')
+chat.print('[Dalandan AIO] RELEASE 01.12.2023 Loading...')
 chat.print('[Dalandan AIO] https://discord.gg/9cxRCHYR4y')
 chat.print('[Dalandan AIO] https://github.com/69sinisterblade69/DalandanAIO')
 
@@ -11,7 +11,11 @@ if menu.mainmenu.utility:get() then
     module.load("Dalandan_AIO", "Utility/trollChat");
     module.load("Dalandan_AIO", "Utility/trollPing");
     module.load("Dalandan_AIO", "Utility/trollEmote");
-    module.load("Dalandan_AIO", "Utility/aa");
+    -- module.load("Dalandan_AIO", "Utility/weeb");
+end
+if menu.mainmenu.awareness:get() then
+    module.load("Dalandan_AIO", "Awareness/aa");
+    module.load("Dalandan_AIO", "Awareness/cooldown");
 end
 
 local champ = ""

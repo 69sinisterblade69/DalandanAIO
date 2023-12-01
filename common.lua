@@ -291,6 +291,10 @@ function common.damageIndicator(damageM,damageP,range_max,range_min,tooltip)
     end
 end
 
+cb.add(cb.tick,function() 
+    common.highRes = MyMenu.mainmenu.highRes:get()
+end)
+
 -- pure M and P dmg  with runes and items and shit but no armor/spellblock
 -- range_max is optional
 -- range_min is optional
@@ -307,8 +311,8 @@ function common.damageIndicatorUpdated(damage,target,range_max,range_min,tooltip
             damagePercentage =  (target.health - damage) / target.maxHealth
         end
         local currentHealthPercentage = target.health / target.maxHealth
-        
-        local highRes = MyMenu.mainmenu.highRes:get()
+
+        local highRes = common.highRes
         local percentage = 104
         local pointX = 164
         local pointY = 123
@@ -327,16 +331,16 @@ function common.damageIndicatorUpdated(damage,target,range_max,range_min,tooltip
             textY = 105
             tooltipY = 82
             textSize = 22
-            lineSize = 12 -- test
+            lineSize = 12 
         elseif highRes == 3 then
-            percentage = 200
-            pointX = 318
-            pointY = 238
+            percentage = 190
+            pointX = 292
+            pointY = 222
             textX = 310
-            textY = 170
-            tooltipY = 140
+            textY = 160
+            tooltipY = 130
             textSize = 32
-            lineSize = 21
+            lineSize = 20
         end
 
         local startPoint = vec2(hpBar.x + pointX + currentHealthPercentage * percentage , hpBar.y + pointY);

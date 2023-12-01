@@ -12,6 +12,7 @@ Dalandan_menu.mainmenu = menu("Dalandan_Menu", "Dalandan AIO - Menu");
 Dalandan_menu.mainmenu:boolean('champion', 'Load champion script', true);
 Dalandan_menu.mainmenu:boolean('reload', 'Load auto reloading on arena', true);
 Dalandan_menu.mainmenu:boolean('utility', 'Load utility', true);
+Dalandan_menu.mainmenu:boolean('awareness', 'Load awareness', true);
 
 local champ 
 if common.champs[player.charName] then
@@ -25,6 +26,7 @@ Dalandan_menu.mainmenu.champion:set('visible',champ)
 Dalandan_menu.mainmenu.champion:set('callback', menuReload)
 Dalandan_menu.mainmenu.reload:set('callback', menuReload)
 Dalandan_menu.mainmenu.utility:set('callback', menuReload)
+Dalandan_menu.mainmenu.awareness:set('callback', menuReload)
 
 if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu = menu("Dalandan_Menu_Utility", "Dalandan AIO - Utility");
@@ -120,11 +122,30 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu.trollemote:slider('delay', 'Delay (ms)', 250, 100, 500, 10);
     Dalandan_menu.utilitymenu.trollemote.delay:set('callback',menuReload)
 
-    Dalandan_menu.utilitymenu:menu("aa", "AA indicator")
-    -- Dalandan_menu.utilitymenu.aa:boolean("show", "Show how many aa to kill", true)
-    Dalandan_menu.utilitymenu.aa:boolean('show', 'Show how many aa to kill', false);
-    Dalandan_menu.utilitymenu.aa:slider('size', 'Size', 22, 14, 30, 1);
-    Dalandan_menu.utilitymenu.aa:color('MyColor',"Color",255,255,255,255)
+    -- Dalandan_menu.utilitymenu:menu("weeb", "Weeb utilities")
+    -- Dalandan_menu.utilitymenu.weeb:boolean("img","Custom images on double/triple etc.",false)
+    -- Dalandan_menu.utilitymenu.weeb:boolean("sound","Custom sound on double/triple etc.",false)
+  
+    -- Dalandan_menu.utilitymenu.weeb:menu("debug", "debug")
+    -- -- Dalandan_menu.utilitymenu.weeb:keybind('auto', 'auto size', 'T', nil);
+    -- Dalandan_menu.utilitymenu.weeb.debug:slider("x","Image X coord",0,0,graphics.width,1)
+    -- Dalandan_menu.utilitymenu.weeb.debug:slider("y","Image Y coord",0,0,graphics.height,1)
+end
+
+if Dalandan_menu.mainmenu.awareness:get() then
+    Dalandan_menu.awarenessmenu = menu("Dalandan_Menu_Awareness", "Dalandan AIO - Awareness");
+
+    Dalandan_menu.awarenessmenu:menu("aa", "AA indicator")
+    Dalandan_menu.awarenessmenu.aa:boolean('show', 'Show how many aa to kill', true);
+    Dalandan_menu.awarenessmenu.aa:slider('size', 'Size', 22, 14, 50, 1);
+    Dalandan_menu.awarenessmenu.aa:color('MyColor',"Color",255,255,255,255)
+
+    Dalandan_menu.awarenessmenu:menu("cdtracker", "Cooldown tracker")
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('show', 'Show cooldown tracker', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('enemy', 'Show on enemy', true);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('ally', 'Show on ally', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('self', 'Show on self', false);
+
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
