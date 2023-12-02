@@ -145,6 +145,9 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:boolean('enemy', 'Show on enemy', true);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('ally', 'Show on ally', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('self', 'Show on self', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('border', 'Show border', true);
+    Dalandan_menu.awarenessmenu.cdtracker:slider('borderSize', 'Border size', 2, 1, 10, 1);
+    Dalandan_menu.awarenessmenu.cdtracker:color('MyColor', "Border color", 255, 255, 255, 255)
 
 end
 

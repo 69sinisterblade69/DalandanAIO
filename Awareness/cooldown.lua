@@ -12,7 +12,7 @@ local scale = 1
 local textSize = 15
 
 
-local function draw_cd(obj,spellslot, x,y,icons)
+local function draw_cd(obj,spellslot, x,y,icons,size)
 
     -- im dumb :(
     local trueCooldown = obj:spellSlot(spellslot).cooldown
@@ -23,8 +23,14 @@ local function draw_cd(obj,spellslot, x,y,icons)
     end
 
     if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
+        if menu.awarenessmenu.cdtracker.border:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        end
         graphics.draw_sprite(icons[spellslot+1],vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
+        if menu.awarenessmenu.cdtracker.border:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        end
         graphics.draw_sprite(icons[spellslot+1],vec2(x,y),scale,colorCooldown)
         local cooldown = string.format("%.1f", trueCooldown)
         if trueCooldown >= 100 then
@@ -73,12 +79,12 @@ local function drawSpells(obj)
     size = (64 * scale) + 1
 
     -- spell
-    draw_cd(obj,0,x,y,icons)
-    draw_cd(obj,1,x+size,y,icons)
-    draw_cd(obj,2,x+2*size,y,icons)
-    draw_cd(obj,3,x+3*size,y,icons)
-    draw_cd(obj,4,x+4*size,y,icons)
-    draw_cd(obj,5,x+4*size,y-size,icons)
+    draw_cd(obj,0,x,y,icons,size)
+    draw_cd(obj,1,x+size,y,icons,size)
+    draw_cd(obj,2,x+2*size,y,icons,size)
+    draw_cd(obj,3,x+3*size,y,icons,size)
+    draw_cd(obj,4,x+4*size,y,icons,size)
+    draw_cd(obj,5,x+4*size,y-size,icons,size)
 
 end
 

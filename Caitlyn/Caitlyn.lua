@@ -421,9 +421,11 @@ local function lastHit()
     if menu.caitlynmenu.Misc.farm_key:get() and menu.caitlynmenu.q.q_lasthit:get() then
         local seg, obj = orb.farm.skill_farm_linear(q)    
         local delay = q.delay
-        delay = delay + (player.pos2D:dist(seg.endPos)/q.speed)
-        if seg and (string.find(string.lower(tostring(obj.charName)),"siege") or string.find(string.lower(tostring(obj.charName)),"super")) and orb.farm.predict_hp(obj,delay) < damagelib.get_spell_damage('caitlynQ',0,player,obj,false,0) then
-            castQ(seg.endPos, false)
+        if seg then
+            delay = delay + (player.pos2D:dist(seg.endPos)/q.speed)
+            if (string.find(string.lower(tostring(obj.charName)),"siege") or string.find(string.lower(tostring(obj.charName)),"super")) and orb.farm.predict_hp(obj,delay) < damagelib.get_spell_damage('caitlynQ',0,player,obj,false,0) then
+                castQ(seg.endPos, false)
+            end
         end
     end
 end
@@ -514,11 +516,13 @@ end
 local function harass()
     if menu.caitlynmenu.Misc.farm_key:get() and menu.caitlynmenu.q.q_harass:get() then
         local target = getTarget(q.range)
-        local seg = pred.linear.get_prediction(q, target, player)
-        local count = menu.caitlynmenu.q.q_count_harass:get()
-        if seg and seg.endPos:dist(player.pos) <= q.range then
-            if minionsHit(seg.endPos,q) >= count then
-                castQ(seg.endPos, false)
+        if target then
+            local seg = pred.linear.get_prediction(q, target, player)
+            local count = menu.caitlynmenu.q.q_count_harass:get()
+            if seg and seg.endPos:dist(player.pos) <= q.range then
+                if minionsHit(seg.endPos,q) >= count then
+                    castQ(seg.endPos, false)
+                end
             end
         end
     end
