@@ -22,6 +22,6 @@ Utilities:
 - Emote spammer
 
 
-Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/01.12.2023/DalandanAIO.shard
+Download shard: https://github.com/69sinisterblade69/DalandanAIO/releases/download/02.12.2023/DalandanAIO.shard
 
 discord: https://discord.gg/9cxRCHYR4y
