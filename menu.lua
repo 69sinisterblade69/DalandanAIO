@@ -143,10 +143,16 @@ if Dalandan_menu.mainmenu.awareness:get() then
 
     Dalandan_menu.awarenessmenu:menu("cdtracker", "Cooldown tracker")
     Dalandan_menu.awarenessmenu.cdtracker:boolean('show', 'Show cooldown tracker', false);
+    Dalandan_menu.awarenessmenu.cdtracker:dropdown('tracker_style', 'Style of cooldown tracker', 1,{"1","2"})
     Dalandan_menu.awarenessmenu.cdtracker:boolean('enemy', 'Show on enemy', true);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('ally', 'Show on ally', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('self', 'Show on self', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('yuumi', 'Dont show on yuumi', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('level', 'Show skill levels', true);
+    Dalandan_menu.awarenessmenu.cdtracker:dropdown('level_type', 'Style of skill level', 4,{"rectangle","dots outside","dots inside","number"})
+    Dalandan_menu.awarenessmenu.cdtracker:color('skill_color', "skill levels color", 255, 255, 255, 255)
     Dalandan_menu.awarenessmenu.cdtracker:boolean('border', 'Show border', true);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('borderReady', '^ Only if skill ready', true);
     Dalandan_menu.awarenessmenu.cdtracker:slider('borderSize', 'Border size', 2, 1, 10, 1);
     Dalandan_menu.awarenessmenu.cdtracker:color('MyColor', "Border color", 255, 255, 255, 255)
     Dalandan_menu.awarenessmenu.cdtracker:slider('cdColor', 'Brightness of spell on cooldown', 130, 0, 255, 1);
@@ -178,8 +184,8 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:menu("customization", "Additional Customization")
     Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","FIRST CHECK HIGHRES MODE")
     Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","THIS TAB IS FOR FINETUNING")
-    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('x', 'X pos', 0, -500, 500, 1);
-    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('y', 'Y pos', 0, -500, 500, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('x', 'X pos', 0, -100, 100, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('y', 'Y pos', 0, -100, 100, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('scale', 'Size of icons [%]', 100, 0, 500, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceX', 'Spacing of icons [X]', 1, -5, 20, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceY', 'Spacing of icons [Y]', 1, -5, 20, 1);
@@ -190,6 +196,14 @@ if Dalandan_menu.mainmenu.awareness:get() then
         Dalandan_menu.awarenessmenu.cdtracker.customization.spaceX:set('value',1)
         Dalandan_menu.awarenessmenu.cdtracker.customization.spaceY:set('value',1)
     end)
+    Dalandan_menu.awarenessmenu.cdtracker.customization:button('Level1Preset',"Preset for 1080p and showing skill levels","Click",function() 
+      Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',-25)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.y:set('value',5)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.scale:set('value',110)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.spaceX:set('value',5)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.spaceY:set('value',1)
+    end)
+    Dalandan_menu.awarenessmenu.cdtracker.customization.Level1Preset:set('tooltip', 'Recommended values if playing with skill levels on 1080p screen, increases clarity of levels');
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then

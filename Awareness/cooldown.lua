@@ -13,6 +13,7 @@ local scale = 0.4
 local textSize = 15
 
 -- KYS KYS
+-- btw brian pls no skid ok? 
 local fuck_my_shit = {}
 
 local function on_process_spell(spell)
@@ -95,12 +96,12 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
 
     if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
         if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.border:get() and not menu.awarenessmenu.cdtracker.borderReady:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
         local cooldown = string.format("%.1f", trueCooldown)
@@ -112,7 +113,38 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
         -- too bad.
         a = (size - a) / 2
         b = ((size / 2) - (b / 2)) + 0.5*textSize
-        graphics.draw_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
+        graphics.draw_outlined_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
+    end
+
+    if menu.awarenessmenu.cdtracker.level:get() and obj:spellSlot(spellslot).level >= 1 and spellslot >= 0 and spellslot <= 3 then
+        local lvlSize = size/6
+        local space = lvlSize/4
+        local count = 0
+        -- chat.print(size)
+        if menu.awarenessmenu.cdtracker.level_type:get() == 1 then -- rectangle
+            for i=1, obj:spellSlot(spellslot).level do
+                graphics.draw_rectangle_2D(x+(lvlSize*count)+(space*count), y+size+menu.awarenessmenu.cdtracker.borderSize:get()+4, lvlSize , lvlSize*2, 0, menu.awarenessmenu.cdtracker.skill_color:get(), true)
+                count = count + 1
+            end
+        elseif menu.awarenessmenu.cdtracker.level_type:get() == 2 then -- dots outside
+            for i=1, obj:spellSlot(spellslot).level do
+                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2), y+size+menu.awarenessmenu.cdtracker.borderSize:get()+4, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
+                count = count + 1
+            end
+        elseif menu.awarenessmenu.cdtracker.level_type:get() == 3 then -- dots inside
+            for i=1, obj:spellSlot(spellslot).level do
+                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2), y+size-4, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
+                count = count + 1
+            end
+        elseif menu.awarenessmenu.cdtracker.level_type:get() == 4 then -- number
+            local text = obj:spellSlot(spellslot).level
+            local a,b = graphics.text_area(tostring(cooldown),textSize)
+            -- ive no fuckin idea where center of text is, so it's shit
+            -- too bad.
+            a = (size - a) / 2
+            b = ((size / 2) - (b / 2)) + 0.5*textSize
+            graphics.draw_outlined_text_2D(text,textSize,x+a,y+3*b,menu.awarenessmenu.cdtracker.skill_color:get())
+        end
     end
 end
 
@@ -158,12 +190,12 @@ local function draw_shit_cd(obj,spellslot, x,y,icon,size, item)
 
     if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
         if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.border:get() and not menu.awarenessmenu.cdtracker.borderReady:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
 
@@ -176,7 +208,7 @@ local function draw_shit_cd(obj,spellslot, x,y,icon,size, item)
         -- too bad.
         a = (size - a) / 2
         b = ((size / 2) - (b / 2)) + 0.5*textSize
-        graphics.draw_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
+        graphics.draw_outlined_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
     end
 end
 
@@ -222,8 +254,14 @@ local function drawSpells(obj)
     draw_cd(obj,1,x+size+spaceX,y,icons[2],size)
     draw_cd(obj,2,x+2*size+2*spaceX,y,icons[3],size)
     draw_cd(obj,3,x+3*size+3*spaceX,y,icons[4],size)
-    draw_cd(obj,4,x+4*size+4*spaceX,y,icons[5],size)
-    draw_cd(obj,5,x+4*size+4*spaceX,y-size-spaceY,icons[6],size)
+    if menu.awarenessmenu.cdtracker.tracker_style:get() == 1 then
+        draw_cd(obj,4,x+4*size+4*spaceX,y,icons[5],size)
+        draw_cd(obj,5,x+4*size+4*spaceX,y-size-spaceY,icons[6],size)
+    elseif menu.awarenessmenu.cdtracker.tracker_style:get() == 2 then
+        draw_cd(obj,4,x+4*size+4*spaceX,y-size-spaceY,icons[5],size)
+        draw_cd(obj,5,x+5*size+5*spaceX,y-size-spaceY,icons[6],size)
+    end
+
 
     if menu.awarenessmenu.cdtracker.item:get() then
         local items_to_check = {}
@@ -292,6 +330,10 @@ local function drawSpells(obj)
         -- end
 
         local countX = 0
+        if menu.awarenessmenu.cdtracker.level:get() and menu.awarenessmenu.cdtracker.level_type:get() == 1 or menu.awarenessmenu.cdtracker.level_type:get() == 2 or menu.awarenessmenu.cdtracker.level_type:get() == 4 then
+            spaceY = spaceY + menu.awarenessmenu.cdtracker.borderSize:get()+4 + (3*(size/6))
+        end
+
         for j, item in pairs(items_to_check) do
             for i=0, 5 do
                 if obj:itemID(i) == item then
@@ -336,8 +378,13 @@ local function drawSpells(obj)
                         icon = graphics.sprite("sprites/items/6029.png")
                     end
 
-                    -- draw_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size)
-                    draw_shit_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size,item)
+                    if menu.awarenessmenu.cdtracker.tracker_style:get() == 1 then
+                        -- draw_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size)
+                        draw_shit_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size,item)
+                    elseif menu.awarenessmenu.cdtracker.tracker_style:get() == 2 then
+                        draw_shit_cd(obj,6+i,x+4*size+4*spaceX+countX*size+countX*spaceX,y,icon,size,item)
+                    end
+
                     countX = countX + 1
                 end
             end
@@ -345,12 +392,9 @@ local function drawSpells(obj)
     end
 
 end
--- local hash = game.fnvhash("Effect3Amount")
--- chat.print(player:inventorySlot(0):calculate(hash))
--- chat.print(player:inventorySlot(0):getTooltip(0))
--- chat.print(player:spellSlot(7).icon)
+
 local function on_draw()
-    -- chat.print(player:spellSlot(6).level)
+
     if not menu.awarenessmenu.cdtracker.show:get() then return end
     
     MenuColor = menu.awarenessmenu.cdtracker.cdColor:get()
@@ -361,9 +405,15 @@ local function on_draw()
         local countT = objManager.enemies_n
         for i=0, countT-1 do
             local obj = heroesS[i]
+            if menu.awarenessmenu.cdtracker.yuumi:get() then
+                if obj.charName == "Yuumi" then
+                    goto Y
+                end
+            end
             if not obj.isDead and obj.isOnScreen and obj.isVisible then 
                 drawSpells(obj) 
             end
+            ::Y::
         end
     end
 
@@ -373,6 +423,11 @@ local function on_draw()
         for i=0, count-1 do
             local obj = heroes[i]
             local show = false
+            if menu.awarenessmenu.cdtracker.yuumi:get() then
+                if obj.charName == "Yuumi" then
+                    goto YY
+                end
+            end
             if menu.awarenessmenu.cdtracker.self:get() and obj == player then
                 show = true
             end
@@ -384,6 +439,7 @@ local function on_draw()
                     drawSpells(obj) 
                 end
             end
+            ::YY::
         end
     end
 
