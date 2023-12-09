@@ -342,40 +342,40 @@ local function drawSpells(obj)
                     -- some items are just retarded :/
                     -- cuz player:inventorySlot(0).icon doesn't work
                     if item == 2420 or item == 2423 then
-                        icon = graphics.sprite("sprites/items/2420.png")
+                        icon = graphics.sprite("Sprites/items/2420.png")
                     end
                     if item == 3026 then
-                        icon = graphics.sprite("sprites/items/3026.png")
+                        icon = graphics.sprite("Sprites/items/3026.png")
                     end
                     if item == 4644 then
-                        icon = graphics.sprite("sprites/items/4644.png")
+                        icon = graphics.sprite("Sprites/items/4644.png")
                     end
                     if item == 3139 then
-                        icon = graphics.sprite("sprites/items/3139.png")
+                        icon = graphics.sprite("Sprites/items/3139.png")
                     end
                     if item == 3140 then
-                        icon = graphics.sprite("sprites/items/3140.png")
+                        icon = graphics.sprite("Sprites/items/3140.png")
                     end
                     if item == 6035 then
-                        icon = graphics.sprite("sprites/items/6035.png")
+                        icon = graphics.sprite("Sprites/items/6035.png")
                     end
                     if item == 3222 then
-                        icon = graphics.sprite("sprites/items/3222.png")
+                        icon = graphics.sprite("Sprites/items/3222.png")
                     end
                     if item == 6673 then
-                        icon = graphics.sprite("sprites/items/6673.png")
+                        icon = graphics.sprite("Sprites/items/6673.png")
                     end
                     if item == 3040 then
-                        icon = graphics.sprite("sprites/items/3040.png")
+                        icon = graphics.sprite("Sprites/items/3040.png")
                     end
                     if item == 3193 then
-                        icon = graphics.sprite("sprites/items/3193.png")
+                        icon = graphics.sprite("Sprites/items/3193.png")
                     end
                     if item == 3102 then
-                        icon = graphics.sprite("sprites/items/3102.png")
+                        icon = graphics.sprite("Sprites/items/3102.png")
                     end
                     if item == 6029 then
-                        icon = graphics.sprite("sprites/items/6029.png")
+                        icon = graphics.sprite("Sprites/items/6029.png")
                     end
 
                     if menu.awarenessmenu.cdtracker.tracker_style:get() == 1 then
