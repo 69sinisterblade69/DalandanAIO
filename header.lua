@@ -36,6 +36,8 @@ resources = {
   'Xerath/Xerath.png',
   'Yone/Yone.png',
   'Caitlyn/Caitlyn.png',
+
+  'Sprites/items/2420.png','Sprites/items/3139.png','Sprites/items/3140.png','Sprites/items/3193.png','Sprites/items/3222.png','Sprites/items/6029.png','Sprites/items/6035.png',
 },
   load = function()
     return true; 

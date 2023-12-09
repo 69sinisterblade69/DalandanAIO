@@ -9,14 +9,17 @@ local function on_create_minion(obj)
         elseif menu.utilitymenu.pings.ping_ward_type:get() == 2 then
             pingType = ping.ALERT
         end
-
+        local delay = menu.utilitymenu.pings.delay:get() / 1000
         if obj.isWard and obj.team == TEAM_ENEMY and menu.utilitymenu.pings.ping_ward_visible:get() and obj.isOnScreen then
-            ping.send(obj.pos, pingType, obj)
+            common.DelayAction(function() 
+                ping.send(obj.pos, pingType, obj)
+            end, delay)
         elseif obj.isWard and obj.team == TEAM_ENEMY and not menu.utilitymenu.pings.ping_ward_visible:get() then
-            ping.send(obj.pos, pingType, obj)
+            common.DelayAction(function() 
+                ping.send(obj.pos, pingType, obj)
+            end, delay)
         end
     end
-
 end
 
 local function on_process_spell(spell)
@@ -172,4 +175,4 @@ cb.add(cb.tick,on_tick)
 cb.add(cb.create_minion,on_create_minion)
 cb.add(cb.spell,on_process_spell)
 
-chat.print("[Dalandan AIO] Auto pings loaded successfully")
+-- chat.print("[Dalandan AIO] Auto pings loaded successfully")

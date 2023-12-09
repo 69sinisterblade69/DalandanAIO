@@ -204,6 +204,19 @@ local function castE(pos)
     -- orb.core.set_server_pause()
 end
 
+local function trace_filter_q(seg, obj)
+    if pred.trace.linear.hardlock(q, seg, obj) then
+        return true
+    end
+    if pred.trace.linear.hardlockmove(q, seg, obj) then
+        return true
+    end
+
+    if pred.trace.newpath(obj, 0.033, 0.500) then
+        return true
+    end
+end
+
 local function castQ(pos, check, target)
     if orb.core.is_spell_locked() then return end
     if player:spellSlot(0).state ~= 0 then return end
@@ -230,7 +243,6 @@ local function castQ(pos, check, target)
             end
         end
     end
-
 
     if pos.z ~= nil then
         player:castSpell("pos",0, vec3(pos.x, pos.y, pos.z))
@@ -332,7 +344,13 @@ local function combo()
             if count < 1 then
                 local pred_seg = pred.linear.get_prediction(q,target)
                 if pred_seg.endPos and pred_seg.endPos:dist(player.pos) < q.range then
-                    castQ(pred_seg.endPos, true, target)
+                    if menu.caitlynmenu.q.pred:get() then
+                        if trace_filter_q(pred_seg,target) then
+                            castQ(pred_seg.endPos, true, target)
+                        end
+                    else
+                        castQ(pred_seg.endPos, true, target)
+                    end
                 end
             end
         end
@@ -461,7 +479,13 @@ local function killsteal()
                             if target and common.IsValidTarget(target) then
                                 local pred_segQ = pred.linear.get_prediction(q, target, player)
                                 if pred_segQ and pred_segQ.endPos:dist(player.pos) <= q.range and menu.caitlynmenu.q.q_eq:get() then
-                                    castQ(pred_segQ.endPos, false, target)
+                                    if menu.caitlynmenu.q.pred:get() then
+                                        if trace_filter_q(pred_segQ,target) then
+                                            castQ(pred_segQ.endPos, false, target)
+                                        end
+                                    else
+                                        castQ(pred_segQ.endPos, false, target)
+                                    end
                                 end
                             end
                         end,e.delay + network.latency)
@@ -521,7 +545,13 @@ local function harass()
             local count = menu.caitlynmenu.q.q_count_harass:get()
             if seg and seg.endPos:dist(player.pos) <= q.range then
                 if minionsHit(seg.endPos,q) >= count then
-                    castQ(seg.endPos, false)
+                    if menu.caitlynmenu.q.pred:get() then
+                        if trace_filter_q(seg,target) then
+                            castQ(seg.endPos, false)
+                        end
+                    else
+                        castQ(seg.endPos, false)
+                    end
                 end
             end
         end
@@ -578,7 +608,13 @@ local function on_process_spell(spell)
                 if target and common.IsValidTarget(target) then
                     local pred_segQ = pred.linear.get_prediction(q, target, player)
                     if pred_segQ and pred_segQ.endPos:dist(player.pos) <= q.range and menu.caitlynmenu.q.q_eq:get() then
-                        castQ(pred_segQ.endPos, false)
+                        if menu.caitlynmenu.q.pred:get() then
+                            if trace_filter_q(pred_segQ,target) then
+                                castQ(pred_segQ.endPos, false, target)
+                            end
+                        else
+                            castQ(pred_segQ.endPos, false, target)
+                        end
                     end
                 end
             end,delay)

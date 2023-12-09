@@ -34,6 +34,7 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu:menu("pings", "Auto pings")
     Dalandan_menu.utilitymenu.pings:boolean('ping_ward', 'Ping on enemy wards', false);
     Dalandan_menu.utilitymenu.pings:boolean('ping_ward_visible', '^ Ping only if ward is on your screen', false);
+    Dalandan_menu.utilitymenu.pings:slider('delay', '^ Delay [ms]', 700, 0, 5000, 50 );
     Dalandan_menu.utilitymenu.pings:dropdown('ping_ward_type',"Ping type",1,{"Enemy has vision","alert/generic (the blue dot)"})
     Dalandan_menu.utilitymenu.pings:boolean('chat_ult','Write ults in chat', false)
     -- Dalandan_menu.utilitymenu.pings:boolean('ping_ult','Ping ults in chat', false)
@@ -148,7 +149,47 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:boolean('border', 'Show border', true);
     Dalandan_menu.awarenessmenu.cdtracker:slider('borderSize', 'Border size', 2, 1, 10, 1);
     Dalandan_menu.awarenessmenu.cdtracker:color('MyColor', "Border color", 255, 255, 255, 255)
-
+    Dalandan_menu.awarenessmenu.cdtracker:slider('cdColor', 'Brightness of spell on cooldown', 130, 0, 255, 1);
+    -- Dalandan_menu.awarenessmenu.cdtracker:boolean('passive', 'Show certain passives', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.passive:set('tooltip', 'Like anivia, zac, corki etc.');
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('item', 'Show items cooldown', true);
+    
+    Dalandan_menu.awarenessmenu.cdtracker:menu("item_select", "Item select")
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('zhonya', 'Show Zhonya/Stopwatch', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('galeforce', 'Show Galeforce', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('ga', 'Show Guardians Angel', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('qss', 'Show qss/Mercurial Scimitar/Silvermere Dawn', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('youmuu', 'Show Youmuu Ghostblade', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('goredrinker', 'Show Goredrinker/Stridebreaker/Ironspike whip', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('randuin', 'Show Randuin Omen', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('crown', 'Show Crown of the Shattered Queen', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('stridebreaker', 'Show Stridebreaker', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('everfrost', 'Show Everfrost', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('rocketbelt', 'Show Rocketbelt', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('shurelya', 'Show Shurelyas Battlesong', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('mikael', 'Show Mikaels Blessing', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('redemption', 'Show Redemption', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('shieldbow', 'Show Immortal Shieldbow', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('solari', 'Show Locket of the Iron Solari', true);
+    Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('gargoyle', 'Show Gargoyle Stoneplate', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('banshee', 'Show Banshees Veil', true);
+    -- Dalandan_menu.awarenessmenu.cdtracker.item_select:boolean('archangel', 'Show Seraphs Embrace', true);
+    
+    Dalandan_menu.awarenessmenu.cdtracker:menu("customization", "Additional Customization")
+    Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","FIRST CHECK HIGHRES MODE")
+    Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","THIS TAB IS FOR FINETUNING")
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('x', 'X pos', 0, -500, 500, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('y', 'Y pos', 0, -500, 500, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('scale', 'Size of icons [%]', 100, 0, 500, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceX', 'Spacing of icons [X]', 1, -5, 20, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceY', 'Spacing of icons [Y]', 1, -5, 20, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:button('reset',"Reset to default","Click",function() 
+        Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.y:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.scale:set('value',100)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.spaceX:set('value',1)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.spaceY:set('value',1)
+    end)
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
@@ -561,6 +602,7 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
 
     Dalandan_menu.caitlynmenu:menu("q", "Q settings");
     Dalandan_menu.caitlynmenu.q:set('icon',player:spellSlot(0).icon)
+    Dalandan_menu.caitlynmenu.q:boolean("pred","Use slow pred for Q", true)
     Dalandan_menu.caitlynmenu.q:boolean("aarange","Don't use Q in AA range on enemy", true)
     Dalandan_menu.caitlynmenu.q.aarange:set("tooltip","works only in combo")
     Dalandan_menu.caitlynmenu.q:boolean("q_dps","Don't use Q if dps < aa dps", true)

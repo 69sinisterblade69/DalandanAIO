@@ -6,13 +6,84 @@ local damagelib = module.internal("damagelib");
 local common = module.load("Dalandan_AIO", "common");
 local menu = module.load("Dalandan_AIO", "menu");
 
-local colorCooldown = 0xFF555555
+local MenuColor = menu.awarenessmenu.cdtracker.cdColor:get()
+local colorCooldown = graphics.argb(255,MenuColor,MenuColor,MenuColor)
 local colorReady = 0xFFFFFFFF 
-local scale = 1
+local scale = 0.4
 local textSize = 15
 
+-- KYS KYS
+local fuck_my_shit = {}
 
-local function draw_cd(obj,spellslot, x,y,icons,size)
+local function on_process_spell(spell)
+    if spell.owner.type==TYPE_HERO and spell.slot >= 6 and spell.slot <= 11 then
+        print(os.clock(), spell.name, spell.slot)
+        if fuck_my_shit[spell.owner.name] == nil then
+            fuck_my_shit[spell.owner.name] = {}
+        end
+        local cooldown = 0
+        if spell.name == "ZhonyasHourglass" or spell.name == "6671Cast" or spell.name == "3222Active" then
+            cooldown = 120
+        end
+        if spell.name == "YoumusBlade" then
+            cooldown = 45
+        end
+        if spell.name == "QuicksilverSash" or spell.name == "ItemMercurial" or spell.name == "6035_Spell" or spell.name == "ItemRedemption" or spell.name == "3190Active" or spell.name == "Item3193Active" then
+            cooldown = 90
+        end        
+        if spell.name == "6630Active" or spell.name == "6631Active" then
+            cooldown = 12
+        end        
+        if spell.name == "RanduinsOmen" then
+            cooldown = 60
+        end        
+        if spell.name == "6656Cast" then
+            cooldown = 30
+        end
+        if spell.name == "3152Active" then
+            cooldown = 40
+        end 
+        if spell.name == "2065Active" then
+            cooldown = 70
+        end 
+        
+        local time = game.time
+        fuck_my_shit[spell.owner.name][spell.name] = {
+            cooldown = cooldown,
+            time = time,
+            cd = 0,
+            trueTime = 0,
+        }
+    end
+end
+
+cb.add(cb.spell, on_process_spell)
+
+
+-- KYS KYS KYS KYS KYS 
+-- why cant spellslot cooldown just work for items
+-- KYS KYS KYS KYS KYS
+local function cdShit()
+    for name, shit in pairs(fuck_my_shit) do
+        if shit and name then
+            for spell, cd in pairs(shit) do
+                if spell then
+                    fuck_my_shit[name][spell].cd = game.time - fuck_my_shit[name][spell].time
+                    fuck_my_shit[name][spell].trueTime = fuck_my_shit[name][spell].cooldown - fuck_my_shit[name][spell].cd
+                    if fuck_my_shit[name][spell].trueTime < 0 then
+                        fuck_my_shit[name][spell].trueTime = 0
+                    end
+                    -- print(os.clock(), tostring(spell), fuck_my_shit[name][spell].trueTime)
+                end
+            end
+        end
+    end
+end
+
+cb.add(cb.draw2, cdShit)
+-- KYS KYS
+
+local function draw_cd(obj,spellslot, x,y,icon,size)
 
     -- im dumb :(
     local trueCooldown = obj:spellSlot(spellslot).cooldown
@@ -26,12 +97,76 @@ local function draw_cd(obj,spellslot, x,y,icons,size)
         if menu.awarenessmenu.cdtracker.border:get() then
             graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
-        graphics.draw_sprite(icons[spellslot+1],vec2(x,y),scale,colorReady)
+        graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
         if menu.awarenessmenu.cdtracker.border:get() then
             graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
         end
-        graphics.draw_sprite(icons[spellslot+1],vec2(x,y),scale,colorCooldown)
+        graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
+        local cooldown = string.format("%.1f", trueCooldown)
+        if trueCooldown >= 100 then
+            cooldown = string.format("%.0f", trueCooldown)
+        end
+        local a,b = graphics.text_area(tostring(cooldown),textSize)
+        -- ive no fuckin idea where center of text is, so it's shit
+        -- too bad.
+        a = (size - a) / 2
+        b = ((size / 2) - (b / 2)) + 0.5*textSize
+        graphics.draw_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
+    end
+end
+
+-- KYS KYS KYS KYS
+local function draw_shit_cd(obj,spellslot, x,y,icon,size, item)
+
+    local ShitList = {
+        [3157] = "ZhonyasHourglass",
+        [6671] = "6671Cast",
+        [3142] = "YoumusBlade",
+        [3140] = "QuicksilverSash",
+        [3139] = "ItemMercurial",
+        [6035] = "6035_Spell",
+        [6630] = "6630Active",
+        [6631] = "6631Active",
+        [6029] = "6029Active",
+        [3143] = "RanduinsOmen",
+        [6656] = "6656Cast",
+        [3152] = "3152Active",
+        [2065] = "2065Active",
+        [3222] = "3222Active",
+        [3107] = "ItemRedemption",
+        [3190] = "3190Active",
+        [3193] = "Item3193Active",
+    }
+
+    -- -- im dumb :(
+    local trueCooldown
+    for name, shit in pairs(fuck_my_shit) do
+        if shit and name then
+            for spell, cd in pairs(shit) do
+                if spell then
+                    if fuck_my_shit[name][ShitList[item]] then
+                        trueCooldown = fuck_my_shit[name][ShitList[item]].trueTime
+                    end
+                end
+            end
+        end
+    end
+    if not trueCooldown then
+        trueCooldown = 0
+    end
+
+    if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
+        if menu.awarenessmenu.cdtracker.border:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        end
+        graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
+    elseif obj:spellSlot(spellslot).level >= 1 then
+        if menu.awarenessmenu.cdtracker.border:get() then
+            graphics.draw_rectangle_2D(x-1, y-1, size+1, size+1, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        end
+        graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
+
         local cooldown = string.format("%.1f", trueCooldown)
         if trueCooldown >= 100 then
             cooldown = string.format("%.0f", trueCooldown)
@@ -57,8 +192,6 @@ local function drawSpells(obj)
 
     local x = obj.barPos.x
     local y = obj.barPos.y
-    scale = 1
-    textSize = 15
     if common.highRes == 1 then --1080p
         x = x + 164
         y = y + 138
@@ -69,57 +202,191 @@ local function drawSpells(obj)
         y = y + 165
         scale = 0.48
         textSize = 18
-    elseif common.highRes == 3 then --1440
+    elseif common.highRes == 3 then --4k
         x = x + 292
         y = y + 248
         scale = 0.75
         textSize = 25
     end
+    
+    x = x + menu.awarenessmenu.cdtracker.customization.x:get()
+    y = y + menu.awarenessmenu.cdtracker.customization.y:get()
+    scale = scale * menu.awarenessmenu.cdtracker.customization.scale:get()/100
+    -- todo: textSize
 
-    size = (64 * scale) + 1
-
+    size = (64 * scale)
+    local spaceX = menu.awarenessmenu.cdtracker.customization.spaceX:get()
+    local spaceY = menu.awarenessmenu.cdtracker.customization.spaceY:get()
     -- spell
-    draw_cd(obj,0,x,y,icons,size)
-    draw_cd(obj,1,x+size,y,icons,size)
-    draw_cd(obj,2,x+2*size,y,icons,size)
-    draw_cd(obj,3,x+3*size,y,icons,size)
-    draw_cd(obj,4,x+4*size,y,icons,size)
-    draw_cd(obj,5,x+4*size,y-size,icons,size)
+    draw_cd(obj,0,x,y,icons[1],size)
+    draw_cd(obj,1,x+size+spaceX,y,icons[2],size)
+    draw_cd(obj,2,x+2*size+2*spaceX,y,icons[3],size)
+    draw_cd(obj,3,x+3*size+3*spaceX,y,icons[4],size)
+    draw_cd(obj,4,x+4*size+4*spaceX,y,icons[5],size)
+    draw_cd(obj,5,x+4*size+4*spaceX,y-size-spaceY,icons[6],size)
+
+    if menu.awarenessmenu.cdtracker.item:get() then
+        local items_to_check = {}
+        if menu.awarenessmenu.cdtracker.item_select.zhonya:get() then
+            table.insert(items_to_check,3157)
+            table.insert(items_to_check,2420)
+            -- table.insert(items_to_check,2419)
+            table.insert(items_to_check,2423)
+        end
+        if menu.awarenessmenu.cdtracker.item_select.randuin:get() then
+            table.insert(items_to_check,3143)
+        end
+        if menu.awarenessmenu.cdtracker.item_select.youmuu:get() then
+            table.insert(items_to_check,3142)
+        end
+        if menu.awarenessmenu.cdtracker.item_select.galeforce:get() then
+            table.insert(items_to_check,6671)
+        end
+        -- if menu.awarenessmenu.cdtracker.item_select.ga:get() then
+        --     table.insert(items_to_check,3026) 
+        -- end
+        if menu.awarenessmenu.cdtracker.item_select.goredrinker:get() then
+            table.insert(items_to_check,6630)
+            table.insert(items_to_check,6029)
+            table.insert(items_to_check,6631) 
+        end
+        
+        -- if menu.awarenessmenu.cdtracker.item_select.crown:get() then
+        --     table.insert(items_to_check,4644) 
+        -- end
+        if menu.awarenessmenu.cdtracker.item_select.qss:get() then
+            table.insert(items_to_check,3140) 
+            table.insert(items_to_check,3139) 
+            table.insert(items_to_check,6035) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.everfrost:get() then
+            table.insert(items_to_check,6656) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.rocketbelt:get() then
+            table.insert(items_to_check,3152) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.shurelya:get() then
+            table.insert(items_to_check,2065) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.redemption:get() then
+            table.insert(items_to_check,3107) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.mikael:get() then
+            table.insert(items_to_check,3222) 
+        end
+        -- if menu.awarenessmenu.cdtracker.item_select.shieldbow:get() then
+        --     table.insert(items_to_check,6673) 
+        -- end
+        if menu.awarenessmenu.cdtracker.item_select.solari:get() then
+            table.insert(items_to_check,3190) 
+        end
+        if menu.awarenessmenu.cdtracker.item_select.gargoyle:get() then
+            table.insert(items_to_check,3193) 
+        end
+        -- if menu.awarenessmenu.cdtracker.item_select.banshee:get() then
+        --     table.insert(items_to_check,3102) 
+        -- end
+        -- --
+        -- if menu.awarenessmenu.cdtracker.item_select.archangel:get() then
+        --     table.insert(items_to_check,3040) 
+        -- end
+
+        local countX = 0
+        for j, item in pairs(items_to_check) do
+            for i=0, 5 do
+                if obj:itemID(i) == item then
+                    local icon = obj:spellSlot(6+i).icon
+                    
+                    -- some items are just retarded :/
+                    -- cuz player:inventorySlot(0).icon doesn't work
+                    if item == 2420 or item == 2423 then
+                        icon = graphics.sprite("sprites/items/2420.png")
+                    end
+                    if item == 3026 then
+                        icon = graphics.sprite("sprites/items/3026.png")
+                    end
+                    if item == 4644 then
+                        icon = graphics.sprite("sprites/items/4644.png")
+                    end
+                    if item == 3139 then
+                        icon = graphics.sprite("sprites/items/3139.png")
+                    end
+                    if item == 3140 then
+                        icon = graphics.sprite("sprites/items/3140.png")
+                    end
+                    if item == 6035 then
+                        icon = graphics.sprite("sprites/items/6035.png")
+                    end
+                    if item == 3222 then
+                        icon = graphics.sprite("sprites/items/3222.png")
+                    end
+                    if item == 6673 then
+                        icon = graphics.sprite("sprites/items/6673.png")
+                    end
+                    if item == 3040 then
+                        icon = graphics.sprite("sprites/items/3040.png")
+                    end
+                    if item == 3193 then
+                        icon = graphics.sprite("sprites/items/3193.png")
+                    end
+                    if item == 3102 then
+                        icon = graphics.sprite("sprites/items/3102.png")
+                    end
+                    if item == 6029 then
+                        icon = graphics.sprite("sprites/items/6029.png")
+                    end
+
+                    -- draw_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size)
+                    draw_shit_cd(obj,6+i,x+countX*size+countX*spaceX,y+size+spaceY,icon,size,item)
+                    countX = countX + 1
+                end
+            end
+        end
+    end
 
 end
-
+-- local hash = game.fnvhash("Effect3Amount")
+-- chat.print(player:inventorySlot(0):calculate(hash))
+-- chat.print(player:inventorySlot(0):getTooltip(0))
+-- chat.print(player:spellSlot(7).icon)
 local function on_draw()
-    -- local v = graphics.world_to_screen(mousePos)
-    -- graphics.draw_text_2D("xd",100,v.x,v.y,0xFFFFFFFF)
+    -- chat.print(player:spellSlot(6).level)
     if not menu.awarenessmenu.cdtracker.show:get() then return end
-    local heroes = objManager.allies
-    local count = objManager.allies_n
-    for i=0, count-1 do
-        local obj = heroes[i]
-        local show = false
-        if menu.awarenessmenu.cdtracker.self:get() and obj == player then
-            show = true
-        end
-        if menu.awarenessmenu.cdtracker.ally:get() and obj ~= player then
-            show = true
-        end
-        if show then
+    
+    MenuColor = menu.awarenessmenu.cdtracker.cdColor:get()
+    colorCooldown = graphics.argb(255,MenuColor,MenuColor,MenuColor)
+
+    if menu.awarenessmenu.cdtracker.enemy:get() then
+        local heroesS = objManager.enemies
+        local countT = objManager.enemies_n
+        for i=0, countT-1 do
+            local obj = heroesS[i]
             if not obj.isDead and obj.isOnScreen and obj.isVisible then 
                 drawSpells(obj) 
             end
         end
     end
 
-    heroes = objManager.enemies
-    count = objManager.enemies_n
-    for i=0, count-1 do
-        local obj = heroes[i]
-        if not menu.awarenessmenu.cdtracker.enemy:get() then break end
-
-        if not obj.isDead and obj.isOnScreen and obj.isVisible then 
-            drawSpells(obj) 
+    if menu.awarenessmenu.cdtracker.self:get() or menu.awarenessmenu.cdtracker.ally:get() then
+        local heroes = objManager.allies
+        local count = objManager.allies_n
+        for i=0, count-1 do
+            local obj = heroes[i]
+            local show = false
+            if menu.awarenessmenu.cdtracker.self:get() and obj == player then
+                show = true
+            end
+            if menu.awarenessmenu.cdtracker.ally:get() and obj ~= player then
+                show = true
+            end
+            if show then
+                if not obj.isDead and obj.isOnScreen and obj.isVisible then 
+                    drawSpells(obj) 
+                end
+            end
         end
     end
+
 end
 
 cb.add(cb.draw,on_draw)
