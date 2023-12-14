@@ -7,6 +7,36 @@ MyMenu.mainmenu = menu("Dalandan_Common", "Dalandan AIO - Common");
 MyMenu.mainmenu:dropdown('highRes', 'High res mode', 1,{"1080p","1440p","4k"});
 MyMenu.mainmenu.highRes:set('tooltip',"It's used for things like damage indicator, resolution names are just guidelines, pick one that closest matches damage indicator on your screen")
 
+MyMenu.mainmenu:menu("customization", "Additional customization");
+MyMenu.mainmenu.customization:header('head',"High res mode is used for both")
+MyMenu.mainmenu.customization:header('head',"cd tracker and damage indicator")
+MyMenu.mainmenu.customization:header('head',"HOWEVER this tab")
+MyMenu.mainmenu.customization:header('head',"is only for damage indicator, ") 
+MyMenu.mainmenu.customization:header('head',"since cd tracker has it's own tab")
+MyMenu.mainmenu.customization:slider('x', 'X pos', 0, -400, 400, 1);
+MyMenu.mainmenu.customization:button('xPlus',"^","+",function() 
+    MyMenu.mainmenu.customization.x:set('value',MyMenu.mainmenu.customization.x:get() + 1)
+end)
+MyMenu.mainmenu.customization:button('xMinus',"^","-",function() 
+    MyMenu.mainmenu.customization.x:set('value',MyMenu.mainmenu.customization.x:get() - 1)
+end)
+MyMenu.mainmenu.customization:slider('y', 'Y pos', 0, -400, 400, 1);
+MyMenu.mainmenu.customization:button('yPlus',"^","+",function() 
+    MyMenu.mainmenu.customization.x:set('value',MyMenu.mainmenu.customization.y:get() + 1)
+end)
+MyMenu.mainmenu.customization:button('yMinus',"^","-",function() 
+    MyMenu.mainmenu.customization.x:set('value',MyMenu.mainmenu.customization.y:get() - 1)
+end)
+MyMenu.mainmenu.customization:slider('scale', 'healthbar size (scale) [x]', 100, 30, 300, 1);
+MyMenu.mainmenu.customization.scale:set('tooltip',"set scale and x pos on target with full hp and with full damage indicator (KILLABLE), Changing scale changes it's x pos so you will need to compensate with both settings to make sure it's right")
+MyMenu.mainmenu.customization:slider('TextSize', 'text size [%]', 100, 0, 500, 10);
+
+MyMenu.mainmenu.customization:button('reset',"Reset to default","Click",function() 
+    MyMenu.mainmenu.customization.x:set('value',0)
+    MyMenu.mainmenu.customization.y:set('value',0)
+    MyMenu.mainmenu.customization.scale:set('value',100)
+    MyMenu.mainmenu.customization.TextSize:set('value',100)
+end)
 common = {}
 
 local delayedActions, delayedActionsExecuter = {}, nil
@@ -342,6 +372,13 @@ function common.damageIndicatorUpdated(damage,target,range_max,range_min,tooltip
             textSize = 32
             lineSize = 20
         end
+        percentage = percentage * MyMenu.mainmenu.customization.scale:get()/100
+        pointX = pointX + MyMenu.mainmenu.customization.x:get()
+        pointY = pointY + MyMenu.mainmenu.customization.y:get()
+        textX = textX + MyMenu.mainmenu.customization.x:get()
+        textY = textY + MyMenu.mainmenu.customization.y:get()
+        tooltipY = tooltipY + MyMenu.mainmenu.customization.y:get()
+        textSize = textSize * MyMenu.mainmenu.customization.TextSize:get()/100
 
         local startPoint = vec2(hpBar.x + pointX + currentHealthPercentage * percentage , hpBar.y + pointY);
         local endPoint = vec2(hpBar.x + pointX + damagePercentage * percentage, hpBar.y + pointY);

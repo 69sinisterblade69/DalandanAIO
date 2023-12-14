@@ -17,8 +17,8 @@ local textSize = 15
 local fuck_my_shit = {}
 
 local function on_process_spell(spell)
-    if spell.owner.type==TYPE_HERO and spell.slot >= 6 and spell.slot <= 11 then
-        print(os.clock(), spell.name, spell.slot)
+    if spell.owner.type==TYPE_HERO and spell.slot >= 6 and spell.slot <= 11 and menu.awarenessmenu.cdtracker.item:get() then
+        -- print(os.clock(), spell.name, spell.slot)
         if fuck_my_shit[spell.owner.name] == nil then
             fuck_my_shit[spell.owner.name] = {}
         end
@@ -65,23 +65,25 @@ cb.add(cb.spell, on_process_spell)
 -- why cant spellslot cooldown just work for items
 -- KYS KYS KYS KYS KYS
 local function cdShit()
-    for name, shit in pairs(fuck_my_shit) do
-        if shit and name then
-            for spell, cd in pairs(shit) do
-                if spell then
-                    fuck_my_shit[name][spell].cd = game.time - fuck_my_shit[name][spell].time
-                    fuck_my_shit[name][spell].trueTime = fuck_my_shit[name][spell].cooldown - fuck_my_shit[name][spell].cd
-                    if fuck_my_shit[name][spell].trueTime < 0 then
-                        fuck_my_shit[name][spell].trueTime = 0
+    if menu.awarenessmenu.cdtracker.item:get() then
+        for name, shit in pairs(fuck_my_shit) do
+            if shit and name then
+                for spell, cd in pairs(shit) do
+                    if spell then
+                        fuck_my_shit[name][spell].cd = game.time - fuck_my_shit[name][spell].time
+                        fuck_my_shit[name][spell].trueTime = fuck_my_shit[name][spell].cooldown - fuck_my_shit[name][spell].cd
+                        if fuck_my_shit[name][spell].trueTime < 0 then
+                            fuck_my_shit[name][spell].trueTime = 0
+                        end
+                        -- print(os.clock(), tostring(spell), fuck_my_shit[name][spell].trueTime)
                     end
-                    -- print(os.clock(), tostring(spell), fuck_my_shit[name][spell].trueTime)
                 end
             end
         end
     end
 end
 
-cb.add(cb.draw2, cdShit)
+cb.add(cb.draw, cdShit)
 -- KYS KYS
 
 local function draw_cd(obj,spellslot, x,y,icon,size)
@@ -94,14 +96,21 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
         trueCooldown = obj:spellSlot(spellslot).cooldown
     end
 
+    local borderColor = menu.awarenessmenu.cdtracker.borderr.MyColor:get()
     if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.borderr.border:get() then
+            if menu.awarenessmenu.cdtracker.borderr.borderChange:get() then
+                borderColor = menu.awarenessmenu.cdtracker.borderr.MyColorReady:get()
+            end
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderr.borderSize:get(), borderColor, false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() and not menu.awarenessmenu.cdtracker.borderReady:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.borderr.border:get() and not menu.awarenessmenu.cdtracker.borderr.borderReady:get() then
+            if menu.awarenessmenu.cdtracker.borderr.borderChange:get() then
+                borderColor = menu.awarenessmenu.cdtracker.borderr.MyColorCD:get()
+            end
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderr.borderSize:get(), borderColor, false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
         local cooldown = string.format("%.1f", trueCooldown)
@@ -113,6 +122,8 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
         -- too bad.
         a = (size - a) / 2
         b = ((size / 2) - (b / 2)) + 0.5*textSize
+        a = a + menu.awarenessmenu.cdtracker.customization.cdX:get()
+        b = b + menu.awarenessmenu.cdtracker.customization.cdY:get()
         graphics.draw_outlined_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
     end
 
@@ -120,20 +131,22 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
         local lvlSize = size/6
         local space = lvlSize/4
         local count = 0
+        local menuX = menu.awarenessmenu.cdtracker.customization.levelX:get()
+        local menuY = menu.awarenessmenu.cdtracker.customization.levelY:get()
         -- chat.print(size)
         if menu.awarenessmenu.cdtracker.level_type:get() == 1 then -- rectangle
             for i=1, obj:spellSlot(spellslot).level do
-                graphics.draw_rectangle_2D(x+(lvlSize*count)+(space*count), y+size+menu.awarenessmenu.cdtracker.borderSize:get()+4, lvlSize , lvlSize*2, 0, menu.awarenessmenu.cdtracker.skill_color:get(), true)
+                graphics.draw_rectangle_2D(x+(lvlSize*count)+(space*count)+menuX, y+size+menu.awarenessmenu.cdtracker.borderr.borderSize:get()+4+menuY, lvlSize , lvlSize*2, 0, menu.awarenessmenu.cdtracker.skill_color:get(), true)
                 count = count + 1
             end
         elseif menu.awarenessmenu.cdtracker.level_type:get() == 2 then -- dots outside
             for i=1, obj:spellSlot(spellslot).level do
-                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2), y+size+menu.awarenessmenu.cdtracker.borderSize:get()+4, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
+                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2)+menuX, y+size+menu.awarenessmenu.cdtracker.borderr.borderSize:get()+4+menuY, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
                 count = count + 1
             end
         elseif menu.awarenessmenu.cdtracker.level_type:get() == 3 then -- dots inside
             for i=1, obj:spellSlot(spellslot).level do
-                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2), y+size-4, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
+                graphics.draw_circle_2D(x+(lvlSize*count)+(space*count)+(lvlSize/2)+menuX, y+size-4+menuY, lvlSize/3 , lvlSize/2, menu.awarenessmenu.cdtracker.skill_color:get(), 8)
                 count = count + 1
             end
         elseif menu.awarenessmenu.cdtracker.level_type:get() == 4 then -- number
@@ -143,6 +156,8 @@ local function draw_cd(obj,spellslot, x,y,icon,size)
             -- too bad.
             a = (size - a) / 2
             b = ((size / 2) - (b / 2)) + 0.5*textSize
+            a = a + menuX
+            b = b + menuY
             graphics.draw_outlined_text_2D(text,textSize,x+a,y+3*b,menu.awarenessmenu.cdtracker.skill_color:get())
         end
     end
@@ -188,14 +203,21 @@ local function draw_shit_cd(obj,spellslot, x,y,icon,size, item)
         trueCooldown = 0
     end
 
+    local borderColor = menu.awarenessmenu.cdtracker.borderr.MyColor:get()
     if trueCooldown == 0 and obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.borderr.border:get() then
+            if menu.awarenessmenu.cdtracker.borderr.borderChange:get() then
+                borderColor = menu.awarenessmenu.cdtracker.borderr.MyColorReady:get()
+            end
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderr.borderSize:get(), borderColor, false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorReady)
     elseif obj:spellSlot(spellslot).level >= 1 then
-        if menu.awarenessmenu.cdtracker.border:get() and not menu.awarenessmenu.cdtracker.borderReady:get() then
-            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderSize:get(), menu.awarenessmenu.cdtracker.MyColor:get(), false)
+        if menu.awarenessmenu.cdtracker.borderr.border:get() and not menu.awarenessmenu.cdtracker.borderr.borderReady:get() then
+            if menu.awarenessmenu.cdtracker.borderr.borderChange:get() then
+                borderColor = menu.awarenessmenu.cdtracker.borderr.MyColorCD:get()
+            end
+            graphics.draw_rectangle_2D(x-1, y-1, size+2, size+2, menu.awarenessmenu.cdtracker.borderr.borderSize:get(), borderColor, false)
         end
         graphics.draw_sprite(icon,vec2(x,y),scale,colorCooldown)
 
@@ -208,6 +230,8 @@ local function draw_shit_cd(obj,spellslot, x,y,icon,size, item)
         -- too bad.
         a = (size - a) / 2
         b = ((size / 2) - (b / 2)) + 0.5*textSize
+        a = a + menu.awarenessmenu.cdtracker.customization.cdX:get()
+        b = b + menu.awarenessmenu.cdtracker.customization.cdY:get()
         graphics.draw_outlined_text_2D(cooldown,textSize,x+a,y+b,0xFFFFFFFF)
     end
 end
@@ -331,7 +355,7 @@ local function drawSpells(obj)
 
         local countX = 0
         if menu.awarenessmenu.cdtracker.level:get() and menu.awarenessmenu.cdtracker.level_type:get() == 1 or menu.awarenessmenu.cdtracker.level_type:get() == 2 or menu.awarenessmenu.cdtracker.level_type:get() == 4 then
-            spaceY = spaceY + menu.awarenessmenu.cdtracker.borderSize:get()+4 + (3*(size/6))
+            spaceY = spaceY + menu.awarenessmenu.cdtracker.borderr.borderSize:get()+4 + (3*(size/6))
         end
 
         for j, item in pairs(items_to_check) do
@@ -396,7 +420,9 @@ end
 local function on_draw()
 
     if not menu.awarenessmenu.cdtracker.show:get() then return end
-    
+    if menu.awarenessmenu.cdtracker.fountain:get() then
+        if player.inShopRange then return end
+    end
     MenuColor = menu.awarenessmenu.cdtracker.cdColor:get()
     colorCooldown = graphics.argb(255,MenuColor,MenuColor,MenuColor)
 

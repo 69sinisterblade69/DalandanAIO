@@ -116,21 +116,15 @@ if Dalandan_menu.mainmenu.utility:get() then
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind1', '"keybind1" message', nil,nil);
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind2', '"keybind2" message', nil,nil);
     Dalandan_menu.utilitymenu.trollchat:keybind('troll_keybind3', '"keybind3" message', nil,nil);
+    Dalandan_menu.utilitymenu.trollchat.troll_keybind1:permashow(false)
+    Dalandan_menu.utilitymenu.trollchat.troll_keybind2:permashow(false)
+    Dalandan_menu.utilitymenu.trollchat.troll_keybind3:permashow(false)
 
     Dalandan_menu.utilitymenu:menu("trollemote", "Troll Emote")
     Dalandan_menu.utilitymenu.trollemote:keybind('emote_spam', 'Spam selected emote', nil,'H');
     Dalandan_menu.utilitymenu.trollemote:dropdown('emote',"Select emote",1,{"dance","taunt","laugh","joke"})
     Dalandan_menu.utilitymenu.trollemote:slider('delay', 'Delay (ms)', 250, 100, 500, 10);
     Dalandan_menu.utilitymenu.trollemote.delay:set('callback',menuReload)
-
-    -- Dalandan_menu.utilitymenu:menu("weeb", "Weeb utilities")
-    -- Dalandan_menu.utilitymenu.weeb:boolean("img","Custom images on double/triple etc.",false)
-    -- Dalandan_menu.utilitymenu.weeb:boolean("sound","Custom sound on double/triple etc.",false)
-  
-    -- Dalandan_menu.utilitymenu.weeb:menu("debug", "debug")
-    -- -- Dalandan_menu.utilitymenu.weeb:keybind('auto', 'auto size', 'T', nil);
-    -- Dalandan_menu.utilitymenu.weeb.debug:slider("x","Image X coord",0,0,graphics.width,1)
-    -- Dalandan_menu.utilitymenu.weeb.debug:slider("y","Image Y coord",0,0,graphics.height,1)
 end
 
 if Dalandan_menu.mainmenu.awareness:get() then
@@ -148,13 +142,32 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:boolean('ally', 'Show on ally', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('self', 'Show on self', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('yuumi', 'Dont show on yuumi', false);
+    Dalandan_menu.awarenessmenu.cdtracker:boolean('fountain', 'Dont show when in shop range', true);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('level', 'Show skill levels', true);
     Dalandan_menu.awarenessmenu.cdtracker:dropdown('level_type', 'Style of skill level', 4,{"rectangle","dots outside","dots inside","number"})
-    Dalandan_menu.awarenessmenu.cdtracker:color('skill_color', "skill levels color", 255, 255, 255, 255)
-    Dalandan_menu.awarenessmenu.cdtracker:boolean('border', 'Show border', true);
-    Dalandan_menu.awarenessmenu.cdtracker:boolean('borderReady', '^ Only if skill ready', true);
-    Dalandan_menu.awarenessmenu.cdtracker:slider('borderSize', 'Border size', 2, 1, 10, 1);
-    Dalandan_menu.awarenessmenu.cdtracker:color('MyColor', "Border color", 255, 255, 255, 255)
+    Dalandan_menu.awarenessmenu.cdtracker:color('skill_color', "Skill levels color", 255, 255, 255, 255)
+    
+    Dalandan_menu.awarenessmenu.cdtracker:menu("borderr", "Border")
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:boolean('border', 'Show border', true);
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:boolean('borderReady', '^ Only if skill ready', true);
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:slider('borderSize', 'Border size', 2, 1, 10, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:color('MyColor', "Border color", 255, 255, 255, 255)
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:boolean('borderChange', '^ auto change color if on cd or ready', true);
+    Dalandan_menu.awarenessmenu.cdtracker.borderr.borderChange:set('tooltip', "Remember to disable Only If Skill Ready option!")
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:color('MyColorCD', "Border color CD", 255, 255, 0, 0)
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:color('MyColorReady', "Border color Ready", 255, 0, 255, 0)
+    Dalandan_menu.awarenessmenu.cdtracker.borderr:button("reset","Set default colors","Reset",function() 
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorCD:set('red',255)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorCD:set('green',0)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorCD:set('blue',0)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorCD:set('alpha',255)
+
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorReady:set('red',0)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorReady:set('green',255)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorReady:set('blue',0)
+      Dalandan_menu.awarenessmenu.cdtracker.borderr.MyColorReady:set('alpha',255)
+    end)
+
     Dalandan_menu.awarenessmenu.cdtracker:slider('cdColor', 'Brightness of spell on cooldown', 130, 0, 255, 1);
     -- Dalandan_menu.awarenessmenu.cdtracker:boolean('passive', 'Show certain passives', true);
     -- Dalandan_menu.awarenessmenu.cdtracker.passive:set('tooltip', 'Like anivia, zac, corki etc.');
@@ -189,21 +202,33 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('scale', 'Size of icons [%]', 100, 0, 500, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceX', 'Spacing of icons [X]', 1, -5, 20, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('spaceY', 'Spacing of icons [Y]', 1, -5, 20, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('cdX', 'CD text pos x', 0, -50, 50, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('cdY', 'CD text pos y', 0, -50, 50, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('levelX', 'Level pos x', 0, -50, 50, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('levelY', 'Level pos y', 0, -50, 50, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:button('reset',"Reset to default","Click",function() 
         Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',0)
         Dalandan_menu.awarenessmenu.cdtracker.customization.y:set('value',0)
         Dalandan_menu.awarenessmenu.cdtracker.customization.scale:set('value',100)
         Dalandan_menu.awarenessmenu.cdtracker.customization.spaceX:set('value',1)
         Dalandan_menu.awarenessmenu.cdtracker.customization.spaceY:set('value',1)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.cdX:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.cdY:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.levelX:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.levelY:set('value',0)
     end)
-    Dalandan_menu.awarenessmenu.cdtracker.customization:button('Level1Preset',"Preset for 1080p and showing skill levels","Click",function() 
+    Dalandan_menu.awarenessmenu.cdtracker.customization:button('Level1Preset',"Preset for 1080p and <number> skill levels","Click",function() 
       Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',-25)
       Dalandan_menu.awarenessmenu.cdtracker.customization.y:set('value',5)
       Dalandan_menu.awarenessmenu.cdtracker.customization.scale:set('value',110)
       Dalandan_menu.awarenessmenu.cdtracker.customization.spaceX:set('value',5)
       Dalandan_menu.awarenessmenu.cdtracker.customization.spaceY:set('value',1)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.cdX:set('value',1)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.cdY:set('value',1)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.levelX:set('value',4)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.levelY:set('value',0)
     end)
-    Dalandan_menu.awarenessmenu.cdtracker.customization.Level1Preset:set('tooltip', 'Recommended values if playing with skill levels on 1080p screen, increases clarity of levels');
+    Dalandan_menu.awarenessmenu.cdtracker.customization.Level1Preset:set('tooltip', 'Recommended values if playing with <number> skill levels on 1080p screen');
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
@@ -638,6 +663,7 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.w:boolean("w_auto","Auto W in certain situations", true)
     Dalandan_menu.caitlynmenu.w.w_auto:set("tooltip","like if in melee range, slowed, cc'd, ")
     Dalandan_menu.caitlynmenu.w:boolean("w_ew","Auto W when casting E", true)
+    Dalandan_menu.caitlynmenu.w:boolean("w_prio","Prioritize W over Q in combo (WIP)", true)
 
     Dalandan_menu.caitlynmenu:menu("e", "E settings");
     Dalandan_menu.caitlynmenu.e:set('icon',player:spellSlot(2).icon)
@@ -645,7 +671,11 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.e:boolean("e_antigapcloser","Use E for Anti-Gapclose", true)
     Dalandan_menu.caitlynmenu.e:boolean("e_chase","Use E to chase low hp target", true)
     Dalandan_menu.caitlynmenu.e:slider('chase_hp', 'How low hp to chase [%]', 25, 0, 100, 5);
+    Dalandan_menu.caitlynmenu.e:boolean("e_galeforce","Use E + galeforce in combo", true)
+    Dalandan_menu.caitlynmenu.e:slider('gale_hp', 'How low hp to chase with galeforce combo [%]', 20, 0, 100, 5);
     Dalandan_menu.caitlynmenu.e:boolean("e_safety_melee","Safety check for dashing into melee champion", true)
+    Dalandan_menu.caitlynmenu.e:boolean("e_safety_hook","Block E cast if near enemy has hook", true)
+    Dalandan_menu.caitlynmenu.e.e_safety_hook:set('tooltip',"Blitz, Thresh, Pyke, Nautilus")
 
     Dalandan_menu.caitlynmenu:menu("r", "R settings");
     Dalandan_menu.caitlynmenu.r:set('icon',player:spellSlot(3).icon)
@@ -666,5 +696,6 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.Draw:boolean('e_draw', 'Draw E', true);
     Dalandan_menu.caitlynmenu.Draw:boolean('r_draw', 'Draw R', true);
     Dalandan_menu.caitlynmenu.Draw:boolean('r_dmg', 'Draw R Damage', true);
+    Dalandan_menu.caitlynmenu.Draw:boolean('farm', 'Draw farm toggle status', true);
 end
 return Dalandan_menu

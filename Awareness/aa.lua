@@ -8,10 +8,10 @@ local menu = module.load("Dalandan_AIO", "menu");
 
 local function on_draw()
     if menu.awarenessmenu.aa.show:get() then
+        local color = menu.awarenessmenu.aa.MyColor:get()
+        local size = menu.awarenessmenu.aa.size:get()
         for i,target in pairs(common.GetEnemyHeroes()) do
             if target.isOnScreen and target.isVisible and not target.isDead then
-                local color = menu.awarenessmenu.aa.MyColor:get()
-                local size = menu.awarenessmenu.aa.size:get()
                 local hp = target.health
                 local howManyAA = 0
                 local aaDmg = damagelib.calc_aa_damage(player,target,true)

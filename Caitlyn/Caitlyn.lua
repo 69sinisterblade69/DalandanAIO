@@ -104,6 +104,14 @@ local function posAfterE(pos, range)
     return vec2(x1,y1)
 end
 
+local hookCache = {}
+for i=0, objManager.enemies_n-1 do
+    local obj = objManager.enemies[i]
+    if obj.charName == "Blitzcrank" or obj.charName == "Thresh" or obj.charName == "Pyke" or obj.charName == "Nautilus" then
+        table.insert(hookCache,obj)
+    end
+end
+
 local function dashCheck(pos)
     local safe = true
     if pos.z == nil then
@@ -157,6 +165,24 @@ local function dashCheck(pos)
         safe = false
     end
 
+    -- hook check
+    if menu.caitlynmenu.e.e_safety_hook:get() then
+        local hooks = {
+            ["Blitzcrank"] = 0,
+            ["Thresh"] = 0,
+            ["Pyke"] = 0,
+            ["Nautilus"] = 0,
+        }
+        for j,hhero in pairs(hookCache) do
+            if hhero then
+                if (hhero:spellSlot(hooks[hhero.charName]).cooldown == 0 or hhero:spellSlot(hooks[hhero.charName]).totalCooldown - hhero:spellSlot(hooks[hhero.charName]).cooldown < 0.7) and (hhero.pos:dist(player.pos) < 1500 or pos:dist(hhero.pos) < 1500) then
+                    -- chat.print(os.clock().." hook")
+                    safe = false
+                end
+            end
+        end
+    end
+
     return safe
 end
 
@@ -190,11 +216,14 @@ local function castW(pos, target)
     -- orb.core.set_server_pause()
 end
 
-local function castE(pos)
+local function castE(pos, skip)
     if orb.core.is_spell_locked() then return end
     if player:spellSlot(2).state ~= 0 then return end
+    
+    skip = skip or false
     local dashPos = posAfterE(pos)
-    if dashCheck(dashPos) then
+    local safe = dashCheck(dashPos)
+    if (safe and not skip) or skip then
         if pos.z ~= nil then
             player:castSpell("pos",2, vec3(pos.x, pos.y, pos.z))
         else
@@ -240,6 +269,23 @@ local function castQ(pos, check, target)
             aaDmg = aaDmg + (damagelib.calc_aa_damage(player,target,false) * (howManyAA - 1))
             if player.pos2D:dist(pos) < common.GetAARange() + 65 and aaDmg > qDmg then
                 return
+            end
+        end
+
+        -- w prio check
+        if menu.caitlynmenu.w.w_prio:get() then
+            if target.pos:dist(player.pos) < w.range + 50 then
+                -- get w cd
+                local trueCooldown = player:spellSlot(1).cooldown
+                if player:spellSlot(1).stacks == 0 and player:spellSlot(1).stacksCooldown ~= 0 then
+                    trueCooldown = player:spellSlot(1).stacksCooldown
+                elseif player:spellSlot(1).stacks ~= 0 then
+                    trueCooldown = player:spellSlot(1).cooldown
+                end
+                
+                if trueCooldown < q.delay then
+                    return
+                end
             end
         end
     end
@@ -355,12 +401,27 @@ local function combo()
             end
         end
 
-        -- E
+        -- E (+ galeforce)
         if menu.caitlynmenu.e.e_combo:get() then
             if target.pos:dist(player.pos) < e.range then
                 local pred_seg = pred.linear.get_prediction(e,target)
                 if pred_seg.endPos and pred_seg.endPos:dist(player.pos) < e.range and not pred.collision.get_prediction(e, pred_seg, target)  then
-                    castE(pred_seg.endPos)
+                    if menu.caitlynmenu.e.e_galeforce:get() then
+                        for i=0, 5 do
+                            if player:itemID(i) == 6671 then -- galeforce 
+                                if player:spellSlot(6+i).cooldown == 0 and dashCheck(posAfterE(pred_seg.endPos,-425)) and target.health/target.maxHealth <= menu.caitlynmenu.e.gale_hp:get()/100 then
+                                    castE(pred_seg.endPos, true)
+                                    player:castSpell("pos",6+i, vec3(pred_seg.endPos.x, player.y, pred_seg.endPos.y))
+                                    -- common.DelayAction(function()
+                                    --     player:castSpell("pos",6+i, vec3(pred_seg.endPos.x, player.y, pred_seg.endPos.y))
+                                    -- end,2*network.latency + 0.01)
+                                end
+                            end
+                        end
+                        castE(pred_seg.endPos)
+                    else
+                        castE(pred_seg.endPos)
+                    end
                 end
             end
         end
@@ -382,7 +443,7 @@ local function minionsHit(pos,pred)
     local minionSize = minions.size
     local count = 0
     if pos.z ~= nil then
-        pos = vec(pos.x,pos.z)
+        pos = vec2(pos.x,pos.z)
     end
     local endPos = posAfterE(pos,-q.range)
     for i=0,minionSize do
@@ -428,8 +489,8 @@ local function laneClear()
                 end
             end
             if maxHits >= count then
-                local seg = pred.core.get_pos_after_time(maxMinion,q.delay)
-                castQ(seg,false)
+                -- local seg = pred.core.get_pos_after_time(maxMinion,q.delay)
+                castQ(maxMinion.pos,false)
             end
         end
     end
@@ -648,12 +709,21 @@ local function on_draw()
     if ((ready and player:spellSlot(3).state == 0) or not ready) and menu.caitlynmenu.Draw.r_dmg:get() then
         for i,obj in pairs(common.GetEnemyHeroes()) do
             if common.IsValidTarget(obj) then
-                local damage = damagelib.get_spell_damage('CaitlynR',3,player,obj,true,0)
+                local damage, ad,ap,truedmg = damagelib.get_spell_damage('CaitlynR',3,player,obj,false,0)
                 common.damageIndicatorUpdated(damage,obj)
             end
         end
     end
 
+    if menu.caitlynmenu.Draw.farm:get() then
+        -- graphics.draw_text_2D("KILLABLE: NO", 22, hpBar.x + 190, hpBar.y + 105, 0xFFEDCE34)
+        local v = graphics.world_to_screen(player.pos)
+        if menu.caitlynmenu.Misc.farm_key:get() then
+            graphics.draw_text_2D("Farm: [ON]",16,v.x,v.y+100,0xFF44FF44)
+        else
+            graphics.draw_text_2D("Farm: [OFF]",16,v.x,v.y+100,0xFFFF4444)
+        end
+    end
 end
 
 cb.add(cb.draw,on_draw)
