@@ -3,6 +3,7 @@
 
 Supported champions:
 - Caitlyn
+- Jinx
 - Twisted fate
 - Xerath
 - Yasuo
@@ -11,6 +12,7 @@ Supported champions:
 Awareness:
 - AA damage indicator
 - Cooldown tracker (spells, items)
+- HUD
 
 Utilities: 
 - Arena auto reload 
