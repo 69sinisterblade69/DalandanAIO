@@ -102,26 +102,20 @@ local function ts_filter_basic(res, object, dist)
     end 
 end
 
+local lastTarget = nil
 local function getTarget(range)
-	-- local currentTarget = nil
-    -- -- force [hard] target check
-    -- local target = ts.get_result(ts_filter_basic, nil, nil, true)
-	-- if ts.selected and target ~= nil and ts.selected == target then
-	-- 	if player.pos:dist(target.pos) < (range + target.boundingRadius) then
-    --         return target
-	-- 	end
-	-- end
-    -- currentTarget = ts.get_result(ts_filter_basic, ts.filter_set[1])
-    -- if currenttarget ~= nil then
-    --     if currenttarget.pos:dist(player.pos) < (range + currenttarget.boundingRadius) then
-    --         if common.IsValidTarget(currentTarget) then
-    --             return currentTarget
-    --         end
-    --     end
-    -- end
+    local orbTarget = orb.combat.get_target()
+    if orbTarget and player.pos:dist(orbTarget.pos) < (range + orbTarget.boundingRadius) and common.IsValidTarget(orbTarget) then
+        lastTarget = orbTarget
+        return lastTarget
+    end
+    if lastTarget and common.IsValidTarget(lastTarget) and player.pos:dist(lastTarget.pos) < (range + lastTarget.boundingRadius) and not ts.selected then
+        return lastTarget
+    end
     local target = ts.get_result(ts_filter_basic).object
-    if target then
+    if target and common.IsValidTarget(target) then
         if player.pos:dist(target.pos) < (range + target.boundingRadius) then
+            lastTarget = target
             return target
         end
     end
@@ -750,19 +744,25 @@ end
 cb.add(cb.tick,on_tick)
 
 local function on_draw()
+    if game.shopOpen then
+        return
+    end
     local drawq = menu.yasuomenu.Draw.q_draw:get()
     local drawr = menu.yasuomenu.Draw.r_draw:get()
     local ready = menu.yasuomenu.Draw.ready:get()
 
     local qBuff = false
-	local buff_keys = player.buff.keys
-	for i = 1, buff_keys.n do
-		local buff_key = buff_keys[i]
-		local buff = player.buff[buff_key]
-        if buff and buff.valid and buff.name == "YasuoQ2" then
-            qBuff = true
+    if player.buff then
+    	local buff_keys = player.buff.keys
+        for i = 1, buff_keys.n do
+            local buff_key = buff_keys[i]
+            local buff = player.buff[buff_key]
+            if buff and buff.valid and buff.name == "YasuoQ2" then
+                qBuff = true
+            end
         end
     end
+
 
     if ((ready and player:spellSlot(0).state == 0) or not ready) and drawq and qBuff then
         graphics.draw_circle(player.pos, q2.range, 2, graphics.argb(255, 0, 255, 0), 100)

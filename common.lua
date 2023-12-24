@@ -83,7 +83,7 @@ end
 
 -- Returns true if @object is valid target
 function common.IsValidTarget(object)
-    return (object and not object.isDead and object.isVisible and object.isTargetable and not object.buff[17])
+    return (object and not object.isDead and object.isVisible and object.isTargetable and object.buff and not object.buff[BUFF_INVULNERABILITY]) -- and not object.buff[17]
 end
 
 function common.IsEnemyHero(object) -- works?
@@ -430,13 +430,14 @@ common.champs = {
     --   Lux = true;
     --   Malphite = true;
     --   Ryze = true;
-      TwistedFate = true;
-      Xerath = true;
-      Yasuo = true;
-      -- Zed = true;
-      Yone = true;
+    TwistedFate = true;
+    Xerath = true;
+    Yasuo = true;
+    -- Zed = true;
+    Yone = true;
     --   Ezreal = true;
     Caitlyn = true;
+    Jinx = true;
 }
 
 return common

@@ -268,11 +268,21 @@ local function drawSpells(obj)
     x = x + menu.awarenessmenu.cdtracker.customization.x:get()
     y = y + menu.awarenessmenu.cdtracker.customization.y:get()
     scale = scale * menu.awarenessmenu.cdtracker.customization.scale:get()/100
-    -- todo: textSize
+    textSize = textSize * menu.awarenessmenu.cdtracker.customization.textSize:get()/100
 
     size = (64 * scale)
     local spaceX = menu.awarenessmenu.cdtracker.customization.spaceX:get()
     local spaceY = menu.awarenessmenu.cdtracker.customization.spaceY:get()
+
+    if menu.awarenessmenu.cdtracker.customization.some_champs:get() then
+        if obj.charName == "Annie" or obj.charName == "Jhin" or obj.charName == "Samira" or obj.charName == "Rengar" or
+        (obj.charName == "Corki" and obj.levelRef >= 6) or obj.charName == "Aphelios" or obj.charName == "Graves" or 
+        obj.charName == "Gwen" or obj.charName == "Irelia" or obj.charName == "Ryze" or obj.charName == "Riven" or
+        obj.charName == "Sona" or obj.charName == "Syndra" then
+            y = y + menu.awarenessmenu.cdtracker.customization.some_champs_value:get()
+        end
+    end
+
     -- spell
     draw_cd(obj,0,x,y,icons[1],size)
     draw_cd(obj,1,x+size+spaceX,y,icons[2],size)
@@ -418,11 +428,11 @@ local function drawSpells(obj)
 end
 
 local function on_draw()
-
-    if not menu.awarenessmenu.cdtracker.show:get() then return end
-    if menu.awarenessmenu.cdtracker.fountain:get() then
-        if player.inShopRange then return end
+    if game.shopOpen then
+        return
     end
+    if not menu.awarenessmenu.cdtracker.show:get() then return end
+
     MenuColor = menu.awarenessmenu.cdtracker.cdColor:get()
     colorCooldown = graphics.argb(255,MenuColor,MenuColor,MenuColor)
 

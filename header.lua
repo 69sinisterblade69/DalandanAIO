@@ -4,7 +4,7 @@ description = "Free DalandanAIO",
 shard = {
     'main','common','menu','prediction',
     'Utility/reloader','Utility/pings','Utility/trollChat','Utility/trollPing','Utility/trollEmote',
-    'Awareness/aa','Awareness/cooldown',
+    'Awareness/aa','Awareness/cooldown','Awareness/hud',
     -- 'Lux',
     -- 'Malphite',
     -- 'Ryze',
@@ -13,6 +13,7 @@ shard = {
     'Yasuo/Yasuo',
     'Yone/Yone',
     'Caitlyn/Caitlyn',
+    'Jinx/Jinx',
 },
 flag = {
   text = "Dalandan AIO",
@@ -30,12 +31,6 @@ resources = {
   'Sprites/icon minions dark.png',
   'Sprites/icon minions light.png',
   'Sprites/Yone.png',
-
-  'TwistedFate/TwistedFate.png',
-  'Yasuo/Yasuo.png',
-  'Xerath/Xerath.png',
-  'Yone/Yone.png',
-  'Caitlyn/Caitlyn.png',
 
   'Sprites/items/2420.png','Sprites/items/3139.png','Sprites/items/3140.png','Sprites/items/3193.png','Sprites/items/3222.png','Sprites/items/6029.png','Sprites/items/6035.png',
 },

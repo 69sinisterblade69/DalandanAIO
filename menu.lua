@@ -142,7 +142,6 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:boolean('ally', 'Show on ally', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('self', 'Show on self', false);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('yuumi', 'Dont show on yuumi', false);
-    Dalandan_menu.awarenessmenu.cdtracker:boolean('fountain', 'Dont show when in shop range', true);
     Dalandan_menu.awarenessmenu.cdtracker:boolean('level', 'Show skill levels', true);
     Dalandan_menu.awarenessmenu.cdtracker:dropdown('level_type', 'Style of skill level', 4,{"rectangle","dots outside","dots inside","number"})
     Dalandan_menu.awarenessmenu.cdtracker:color('skill_color', "Skill levels color", 255, 255, 255, 255)
@@ -197,6 +196,9 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker:menu("customization", "Additional Customization")
     Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","FIRST CHECK HIGHRES MODE")
     Dalandan_menu.awarenessmenu.cdtracker.customization:header("cust","THIS TAB IS FOR FINETUNING")
+    Dalandan_menu.awarenessmenu.cdtracker.customization:boolean('some_champs', 'Automatically move it down on some champs', true);
+    Dalandan_menu.awarenessmenu.cdtracker.customization.some_champs:set('tooltip',"like annie, jhin, samira etc.")
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('some_champs_value', '^ Move how much', 10, 0, 100, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('x', 'X pos', 0, -100, 100, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('y', 'Y pos', 0, -100, 100, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('scale', 'Size of icons [%]', 100, 0, 500, 1);
@@ -206,6 +208,7 @@ if Dalandan_menu.mainmenu.awareness:get() then
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('cdY', 'CD text pos y', 0, -50, 50, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('levelX', 'Level pos x', 0, -50, 50, 1);
     Dalandan_menu.awarenessmenu.cdtracker.customization:slider('levelY', 'Level pos y', 0, -50, 50, 1);
+    Dalandan_menu.awarenessmenu.cdtracker.customization:slider('textSize', 'Text size [%]', 0, 0, 500, 5);
     Dalandan_menu.awarenessmenu.cdtracker.customization:button('reset',"Reset to default","Click",function() 
         Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',0)
         Dalandan_menu.awarenessmenu.cdtracker.customization.y:set('value',0)
@@ -216,6 +219,7 @@ if Dalandan_menu.mainmenu.awareness:get() then
         Dalandan_menu.awarenessmenu.cdtracker.customization.cdY:set('value',0)
         Dalandan_menu.awarenessmenu.cdtracker.customization.levelX:set('value',0)
         Dalandan_menu.awarenessmenu.cdtracker.customization.levelY:set('value',0)
+        Dalandan_menu.awarenessmenu.cdtracker.customization.textSize:set('value',100)
     end)
     Dalandan_menu.awarenessmenu.cdtracker.customization:button('Level1Preset',"Preset for 1080p and <number> skill levels","Click",function() 
       Dalandan_menu.awarenessmenu.cdtracker.customization.x:set('value',-25)
@@ -227,8 +231,43 @@ if Dalandan_menu.mainmenu.awareness:get() then
       Dalandan_menu.awarenessmenu.cdtracker.customization.cdY:set('value',1)
       Dalandan_menu.awarenessmenu.cdtracker.customization.levelX:set('value',4)
       Dalandan_menu.awarenessmenu.cdtracker.customization.levelY:set('value',0)
+      Dalandan_menu.awarenessmenu.cdtracker.customization.textSize:set('value',100)
     end)
     Dalandan_menu.awarenessmenu.cdtracker.customization.Level1Preset:set('tooltip', 'Recommended values if playing with <number> skill levels on 1080p screen');
+
+    Dalandan_menu.awarenessmenu:menu("hud", "HUD")
+    Dalandan_menu.awarenessmenu.hud:boolean('show', 'Show HUD', true);
+    Dalandan_menu.awarenessmenu.hud:dropdown('style', 'HUD Style', 3,{"Ws","Ws short","Dalandan"});
+    Dalandan_menu.awarenessmenu.hud.style:set('tooltip','Not every option (like direction or bar height) works on every style, and Im too lazy to hide them automatically, sorry')
+    Dalandan_menu.awarenessmenu.hud:dropdown('direction', 'HUD direction', 1,{"Vertical","Horizontal"});
+    Dalandan_menu.awarenessmenu.hud:boolean('showText', 'Show text on hp and mp', false);
+    Dalandan_menu.awarenessmenu.hud:boolean('showRune', 'Show Runes', false);
+    Dalandan_menu.awarenessmenu.hud:boolean('showExp', 'Show Exp', true);
+    Dalandan_menu.awarenessmenu.hud:boolean('showLocation', 'Show current/last known location', true);
+    Dalandan_menu.awarenessmenu.hud:boolean('reverseSumm', 'Reverse Ult and summoners order', false);
+
+    Dalandan_menu.awarenessmenu.hud:menu("customization", "Customization")
+    Dalandan_menu.awarenessmenu.hud.customization:slider('x', 'X pos', 5, 5, graphics.width, 5);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('y', 'Y pos', 100, 0, graphics.height, 5);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('scale', 'Scale [%]', 100, 1, 500, 5);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('textSize', 'Text size (cooldown and level) [%]', 100, 1, 500, 5);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('deathSize', 'Text size (death and missing timer) [%]', 100, 1, 500, 5);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('barSize', 'Bar height', 15, 1, 100, 1);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('barBorder', 'Bar border size', 3, 0, 20, 1);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('expSize', 'Exp bar height', 2, 1, 100, 1);
+    Dalandan_menu.awarenessmenu.hud.customization:slider('champSpacing', 'Spacing', 5, 0, 50, 1);
+    Dalandan_menu.awarenessmenu.hud.customization:button('reset',"Reset to default","Click",function()
+      Dalandan_menu.awarenessmenu.hud.customization.x:set('value',1) 
+      Dalandan_menu.awarenessmenu.hud.customization.y:set('value',100) 
+      Dalandan_menu.awarenessmenu.hud.customization.scale:set('value',100) 
+      Dalandan_menu.awarenessmenu.hud.customization.textSize:set('value',100)
+      Dalandan_menu.awarenessmenu.hud.customization.deathSize:set('value',100)
+      Dalandan_menu.awarenessmenu.hud.customization.barSize:set('value',15)
+      Dalandan_menu.awarenessmenu.hud.customization.barBorder:set('value',3)
+      Dalandan_menu.awarenessmenu.hud.customization.champSpacing:set('value',5)
+      Dalandan_menu.awarenessmenu.hud.customization.expSize:set('value',2)
+
+  end)
 end
 
 if player.charName == "Lux" and Dalandan_menu.mainmenu.champion:get() then
@@ -338,7 +377,7 @@ if player.charName == "Ryze" and Dalandan_menu.mainmenu.champion:get() then
 end
 if player.charName == "TwistedFate" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.tfmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-    Dalandan_menu.tfmenu:set('icon',graphics.sprite('TwistedFate/TwistedFate.png'))
+    Dalandan_menu.tfmenu:set('icon',player.iconSquare)
     -- Combo
     Dalandan_menu.tfmenu:menu("Combo", "Combo");
     Dalandan_menu.tfmenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
@@ -400,7 +439,7 @@ if player.charName == "TwistedFate" and Dalandan_menu.mainmenu.champion:get() th
 end
 if player.charName == "Xerath" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.xerathmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-    Dalandan_menu.xerathmenu:set('icon',graphics.sprite('Xerath/Xerath.png'))
+    Dalandan_menu.xerathmenu:set('icon',player.iconSquare)
     
     -- Combo
     Dalandan_menu.xerathmenu:menu("Combo", "Combo");
@@ -497,7 +536,7 @@ if player.charName == "Zed" and Dalandan_menu.mainmenu.champion:get() then
 end
 if player.charName == "Yasuo" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.yasuomenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-    Dalandan_menu.yasuomenu:set('icon',graphics.sprite('Yasuo/Yasuo.png'))
+    Dalandan_menu.yasuomenu:set('icon',player.iconSquare)
 
     -- --------------- new shit (old) ---------------
     -- Dalandan_menu.yasuomenu:menu("Combo", "Combo");
@@ -583,7 +622,7 @@ if player.charName == "Yasuo" and Dalandan_menu.mainmenu.champion:get() then
 end
 if player.charName == "Yone" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.yonemenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-    Dalandan_menu.yonemenu:set('icon',graphics.sprite('Yone/Yone.png'))
+    Dalandan_menu.yonemenu:set('icon',player.iconSquare)
 
     Dalandan_menu.yonemenu:menu("Combo", "Combo");
     Dalandan_menu.yonemenu.Combo:set('icon',graphics.sprite('Sprites/Combo.png'))
@@ -637,7 +676,7 @@ end
 -- end
 if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
-    Dalandan_menu.caitlynmenu:set('icon',graphics.sprite('Caitlyn/Caitlyn.png'))
+    Dalandan_menu.caitlynmenu:set('icon',player.iconSquare)
 
     Dalandan_menu.caitlynmenu:menu("q", "Q settings");
     Dalandan_menu.caitlynmenu.q:set('icon',player:spellSlot(0).icon)
@@ -697,5 +736,71 @@ if player.charName == "Caitlyn" and Dalandan_menu.mainmenu.champion:get() then
     Dalandan_menu.caitlynmenu.Draw:boolean('r_draw', 'Draw R', true);
     Dalandan_menu.caitlynmenu.Draw:boolean('r_dmg', 'Draw R Damage', true);
     Dalandan_menu.caitlynmenu.Draw:boolean('farm', 'Draw farm toggle status', true);
+end
+if player.charName == "Jinx" and Dalandan_menu.mainmenu.champion:get() then
+    Dalandan_menu.jinxmenu = menu("Dalandan_Menu_"..player.charName, "Dalandan AIO - "..player.charName);
+    Dalandan_menu.jinxmenu:set('icon',player.iconSquare)
+
+    Dalandan_menu.jinxmenu:menu("q", "Q settings");
+    Dalandan_menu.jinxmenu.q:boolean("q_combo","Use Q in combo", true)
+    Dalandan_menu.jinxmenu.q:boolean("q_combo_aoe","^ Try to use Q for aoe", true)
+    Dalandan_menu.jinxmenu.q:header('head',"Laneclear/Jungleclear")
+    Dalandan_menu.jinxmenu.q:boolean("q_laneclear","Use Q in laneclear", true)
+    Dalandan_menu.jinxmenu.q.q_laneclear:set("tooltip","Will always change to minigun, unless other conditions are met")
+    Dalandan_menu.jinxmenu.q:boolean("q_laneclear_minion","Change to rockets if minions hit", true)
+    Dalandan_menu.jinxmenu.q:slider("q_laneclear_count","^ If can hit x minions", 4, 0, 10, 1)
+    Dalandan_menu.jinxmenu.q:slider("q_laneclear_mana","^ Only when mana >= x [%]", 25, 0, 100, 1)
+    Dalandan_menu.jinxmenu.q:boolean("q_laneclear_heroes","Change to rockets if can hit enemy", true)
+    Dalandan_menu.jinxmenu.q:slider("q_laneclear_heroes_mana","^ Only when mana >= x [%]", 25, 0, 100, 1)
+    Dalandan_menu.jinxmenu.q:boolean("q_laneclear_heroes_orb","Experimental farming mode to poke more with rockets", true)
+    Dalandan_menu.jinxmenu.q.q_laneclear_heroes_orb:set("tooltip","Change farming logic to more often use rockets on minion when enemy stands near them. Enabling this may result in a lot of missed farm")
+    Dalandan_menu.jinxmenu.q:slider("q_laneclear_heroes_orb_mana","^ Only when mana >= x [%]", 25, 0, 100, 1)
+    Dalandan_menu.jinxmenu.q:header('head',"Harass")
+    Dalandan_menu.jinxmenu.q:boolean("q_harass","Use Q in harass", true)
+
+    Dalandan_menu.jinxmenu:menu("w", "W settings");
+    Dalandan_menu.jinxmenu.w:boolean("w_combo","Use W in combo", true)
+    Dalandan_menu.jinxmenu.w:boolean("w_slow_pred","Use slow pred for W", true)
+    Dalandan_menu.jinxmenu.w:menu("block", "Block W cast");
+    Dalandan_menu.jinxmenu.w.block:boolean("w_aa","Don't use W if in AA range", false)
+    Dalandan_menu.jinxmenu.w.block:boolean("w_dps","Don't use W if W dps < aa dps", true)
+    Dalandan_menu.jinxmenu.w.block:boolean("w_near","Don't use W if enemies are near", true)
+    Dalandan_menu.jinxmenu.w.block:slider("w_near_count","^ How many enemies to block cast", 1, 0, 5, 1)
+    Dalandan_menu.jinxmenu.w.block:slider("w_near_range","^ Detection range", 200, 100, 500, 50)
+    Dalandan_menu.jinxmenu.w:boolean("w_ks","Use W to killsteal", true)
+    Dalandan_menu.jinxmenu.w:boolean("w_harass","Use W in harass", true)
+
+    Dalandan_menu.jinxmenu:menu("e", "E settings");
+    Dalandan_menu.jinxmenu.e:boolean("e_antigapcloser","Use E for Anti-Gapclose", true)
+    Dalandan_menu.jinxmenu.e:menu("combo", "E in combo");
+    Dalandan_menu.jinxmenu.e.combo:boolean("e_combo","Use E in combo", true)
+    Dalandan_menu.jinxmenu.e.combo:boolean("e_melee","^ if in melee range", true)
+    Dalandan_menu.jinxmenu.e.combo:boolean("e_slow","^ if slowed", true)
+    Dalandan_menu.jinxmenu.e.combo:boolean("e_stun","^ if hard CC", true)
+    Dalandan_menu.jinxmenu.e:menu("auto", "E auto cast");
+    Dalandan_menu.jinxmenu.e.auto:boolean("e_auto","Enable auto cast E", true)
+    Dalandan_menu.jinxmenu.e.auto:boolean("e_melee","^ if in melee range", true)
+    Dalandan_menu.jinxmenu.e.auto:boolean("e_slow","^ if slowed", false)
+    Dalandan_menu.jinxmenu.e.auto:boolean("e_stun","^ if hard CC", true)
+
+    Dalandan_menu.jinxmenu:menu("r", "R settings");
+    Dalandan_menu.jinxmenu.r:keybind('r_semi', 'Semi R', 'T', nil);
+    Dalandan_menu.jinxmenu.r:boolean("r_ks","Use R to killsteal", true)
+    Dalandan_menu.jinxmenu.r:boolean("r_near","Don't use R if enemies are near", true)
+    Dalandan_menu.jinxmenu.r:slider("r_near_count","^ How many enemies to block cast", 1, 0, 5, 1)
+    Dalandan_menu.jinxmenu.r:slider("r_near_range","^ Detection range", 350, 100, 1000, 50)
+    -- Dalandan_menu.jinxmenu.r:slider("r_min","R min range",900,0,2000,50)
+    Dalandan_menu.jinxmenu.r:boolean("r_aa","Don't cast R in aa range", true)
+    Dalandan_menu.jinxmenu.r:slider("r_max","R max range",2000,1000,5000,100)
+
+    Dalandan_menu.jinxmenu:menu("Draw", "Draw");
+    Dalandan_menu.jinxmenu.Draw:set('icon',graphics.sprite('Sprites/Draw.png'))
+    Dalandan_menu.jinxmenu.Draw:boolean('ready', 'Draw only when skill is ready', true);
+    Dalandan_menu.jinxmenu.Draw:boolean('q_draw', 'Draw Q', true);
+    Dalandan_menu.jinxmenu.Draw:boolean('w_draw', 'Draw W', true);
+    Dalandan_menu.jinxmenu.Draw:boolean('e_draw', 'Draw E', false);
+    Dalandan_menu.jinxmenu.Draw:boolean('r_draw', 'Draw R', true);
+    Dalandan_menu.jinxmenu.Draw:boolean('r_dmg', 'Draw R Damage', true);
+     
 end
 return Dalandan_menu

@@ -1,4 +1,4 @@
-chat.print('[Dalandan AIO] RELEASE 14.12.2023 Loading...')
+chat.print('[Dalandan AIO] RELEASE 24.12.2023 Loading...')
 chat.print('[Dalandan AIO] https://discord.gg/9cxRCHYR4y')
 chat.print('[Dalandan AIO] https://github.com/69sinisterblade69/DalandanAIO')
 
@@ -15,8 +15,9 @@ end
 if menu.mainmenu.awareness:get() then
     module.load("Dalandan_AIO", "Awareness/aa");
     module.load("Dalandan_AIO", "Awareness/cooldown");
+    module.load("Dalandan_AIO", "Awareness/hud");
 end
-
+module.load("Dalandan_AIO", "test");
 local champ = ""
 -- if player.charName == "Lux" and menu.mainmenu.champion:get() then
 --     champ = module.load("Dalandan_AIO", "Lux");
@@ -42,6 +43,9 @@ if player.charName == "Yone" and menu.mainmenu.champion:get() then
 end
 if player.charName == "Caitlyn" and menu.mainmenu.champion:get() then
     champ = module.load("Dalandan_AIO", "Caitlyn/Caitlyn");
+end
+if player.charName == "Jinx" and menu.mainmenu.champion:get() then
+    champ = module.load("Dalandan_AIO", "Jinx/Jinx");
 end
 -- if player.charName == "Zed" and menu.mainmenu.champion:get() then
 --     champ = module.load("Dalandan_AIO", "Zed");

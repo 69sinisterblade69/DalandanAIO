@@ -338,6 +338,9 @@ local function on_tick()
 end
 
 local function on_draw()
+    if game.shopOpen then
+        return
+    end
     local drawq = menu.tfmenu.Draw.q_draw:get()
     local drawr = menu.tfmenu.Draw.r_draw:get()
     local ready = menu.tfmenu.Draw.ready:get()

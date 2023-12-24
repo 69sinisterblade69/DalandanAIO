@@ -71,11 +71,16 @@ end
 
 local lastTarget = nil
 local function getTarget(range)
+    local orbTarget = orb.combat.get_target()
+    if orbTarget and player.pos:dist(orbTarget.pos) < (range + orbTarget.boundingRadius) and common.IsValidTarget(orbTarget) then
+        lastTarget = orbTarget
+        return lastTarget
+    end
     if lastTarget and common.IsValidTarget(lastTarget) and player.pos:dist(lastTarget.pos) < (range + lastTarget.boundingRadius) and not ts.selected then
         return lastTarget
     end
     local target = ts.get_result(ts_filter_basic).object
-    if target then
+    if target and common.IsValidTarget(target) then
         if player.pos:dist(target.pos) < (range + target.boundingRadius) then
             lastTarget = target
             return target
@@ -412,9 +417,9 @@ local function combo()
                                 if player:spellSlot(6+i).cooldown == 0 and dashCheck(posAfterE(pred_seg.endPos,-425)) and target.health/target.maxHealth <= menu.caitlynmenu.e.gale_hp:get()/100 then
                                     castE(pred_seg.endPos, true)
                                     player:castSpell("pos",6+i, vec3(pred_seg.endPos.x, player.y, pred_seg.endPos.y))
-                                    -- common.DelayAction(function()
-                                    --     player:castSpell("pos",6+i, vec3(pred_seg.endPos.x, player.y, pred_seg.endPos.y))
-                                    -- end,2*network.latency + 0.01)
+                                    common.DelayAction(function()
+                                        player:castSpell("pos",6+i, vec3(pred_seg.endPos.x, player.y, pred_seg.endPos.y))
+                                    end,2*network.latency + 0.01)
                                 end
                             end
                         end
@@ -686,6 +691,9 @@ end
 cb.add(cb.spell, on_process_spell)
 
 local function on_draw()
+    if game.shopOpen then
+        return
+    end
     local drawq = menu.caitlynmenu.Draw.q_draw:get()
     local draww = menu.caitlynmenu.Draw.w_draw:get()
     local drawe = menu.caitlynmenu.Draw.e_draw:get()

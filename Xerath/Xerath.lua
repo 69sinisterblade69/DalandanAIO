@@ -537,6 +537,9 @@ local function on_tick()
 end
 
 local function on_draw()
+    if game.shopOpen then
+        return
+    end
     local drawq = menu.xerathmenu.Draw.q_draw:get()
     local draww = menu.xerathmenu.Draw.w_draw:get()
     local drawe = menu.xerathmenu.Draw.e_draw:get()
